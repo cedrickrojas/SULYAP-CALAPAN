@@ -214,8 +214,8 @@ def write_credits(credits):
     page = ROOT / 'public/photo-credits.html'
     head = page.read_text(encoding='utf-8').split('<body>', 1)[0]
     items = []
+    escape = lambda value: html.escape(value, quote=True)
     for photo in credits:
-        escape = lambda value: html.escape(value, quote=True)
         if photo.get('sourceType') == 'published-source':
             items.append('<li><strong>' + escape(photo['file']) + '</strong> — ' + escape(photo['author']) +
                          ' · <a href="' + escape(photo['source']) + '">Original published source</a>' +
@@ -236,6 +236,19 @@ def write_credits(credits):
                      ' · <a href="/images/' + escape(photo['file']) + '">Processed photo</a>.' +
                      ' Resized and compressed for the web; display crops vary. The processed image retains the stated license.</li>')
     body = '<body><a href="/">Back to Sulyap</a><h1>Photo credits</h1><p>Calapan destination photographs come from Wikimedia Commons, the client-supplied Travel Oriental Mindoro portal, Calapan community mapping, UPLB, Mindoro Travel Guide, and Philippine Information Agency MIMAROPA. Individual source and license details are listed below. They may show earlier appearances of the sites; the Baco gallery shows the island group, and the Suqui gallery includes the Donnyland beachfront and private resort frontage.</p><p>The Aganhao gallery uses one verified aerial photograph and two clearly labelled detail crops of that same image. The shoreline and greenery details are not separate photographs. All thirty gallery slots now display destination imagery.</p><ol>' + ''.join(items) + '</ol></body></html>'
+    establishment_sources = ROOT / 'scripts/establishment-photo-assets.json'
+    if establishment_sources.exists():
+        establishment_items = []
+        for photo in json.loads(establishment_sources.read_text(encoding='utf-8')):
+            establishment_items.append(
+                '<li id="establishment-' + escape(photo['id']) + '"><strong>' +
+                escape(photo['name']) + '</strong> &mdash; ' + escape(photo['author']) +
+                ' &middot; <a href="' + escape(photo['source']) + '">Original published source</a>' +
+                ' &middot; <a href="' + escape(photo['url']) + '">Source image</a>' +
+                ' &middot; <a href="/images/' + escape(photo['file']) + '">Local photo</a>. ' +
+                escape(photo['note']) + '</li>')
+        section = '<section id="establishments"><h2>Establishment photographs</h2><p>Photographs are stored locally and linked to their original published sources.</p><ol>' + ''.join(establishment_items) + '</ol></section>'
+        body = body.replace('</body>', section + '</body>')
     page.write_text(head + body, encoding='utf-8')
 
 

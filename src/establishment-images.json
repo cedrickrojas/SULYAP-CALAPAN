@@ -1,0 +1,79 @@
+{
+  "citymall": {
+    "src": "/images/establishments/citymall.webp",
+    "alt": "CityMall Calapan entrance and sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "citimart": {
+    "src": "/images/establishments/citimart.webp",
+    "alt": "Citimart Island Mall street frontage",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "xentro": {
+    "src": "/images/establishments/xentro.webp",
+    "alt": "Xentro Mall Calapan frontage and signage",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "nuciti": {
+    "src": "/images/establishments/nuciti.webp",
+    "alt": "Nuciti Central Calapan entrance",
+    "width": 480,
+    "height": 270,
+    "position": "50% 50%"
+  },
+  "karaoke-city": {
+    "src": "/images/establishments/karaoke-city.webp",
+    "alt": "Karaoke City illuminated entrance",
+    "width": 800,
+    "height": 712,
+    "position": "50% 32%"
+  },
+  "starbox": {
+    "src": "/images/establishments/starbox.webp",
+    "alt": "Starbox KTV Bar & Restaurant building sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "halcons": {
+    "src": "/images/establishments/halcons.webp",
+    "alt": "Halcon's Bar & Resto entrance",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "arsenias": {
+    "src": "/images/establishments/arsenias.webp",
+    "alt": "Arsenia's Hapag Kainan sa Kabukiran illuminated sign at dusk",
+    "width": 800,
+    "height": 600,
+    "position": "50% 65%"
+  },
+  "quatro-bella": {
+    "src": "/images/establishments/quatro-bella.webp",
+    "alt": "Quatro Bella Cafe building and frontage",
+    "width": 800,
+    "height": 603,
+    "position": "50% 40%"
+  },
+  "spice-plates": {
+    "src": "/images/establishments/spice-plates.webp",
+    "alt": "Spice Plates entrance sign",
+    "width": 800,
+    "height": 533,
+    "position": "50% 50%"
+  },
+  "coastline": {
+    "src": "/images/establishments/coastline.webp",
+    "alt": "Evening gathering at Coastline Bar & Lounge, published on its official page",
+    "width": 590,
+    "height": 387,
+    "position": "50% 50%"
+  }
+}

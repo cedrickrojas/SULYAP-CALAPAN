@@ -30,11 +30,13 @@ export const establishments = [
     id: 'coastline', name: 'Coastline Bar & Lounge', category: 'bars', type: 'Bar & lounge',
     description: 'A bar and lounge in Pachoca, Calapan City.',
     address: 'Pachoca, Calapan City, Oriental Mindoro',
+    source: 'https://www.facebook.com/profile.php?id=61590616983978', sourceLabel: 'Official page',
   },
   {
     id: 'blck-out', name: 'BLCK OUT', category: 'bars', type: 'Bar & nightlife',
     description: 'A nightlife venue near Gaisano in Calapan City.',
     address: 'Near Gaisano, Calapan City, Oriental Mindoro',
+    source: 'https://www.facebook.com/blckoutlounge', sourceLabel: 'Official page',
   },
   {
     id: 'karaoke-city', name: 'Karaoke City', category: 'bars', type: 'Karaoke & nightlife',
