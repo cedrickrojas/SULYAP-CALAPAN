@@ -351,3 +351,45 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
   .establishment-card { padding: 24px; }
   .establishments-note { padding: 20px; }
 }
+
+/* Sulyap motion: short entrances and tactile interactions, with steady QR art. */
+.hero-content { animation: none; }
+.motion-pending { opacity: 0; translate: 0 20px; }
+.motion-enter { animation: sulyap-reveal .65s cubic-bezier(.22, 1, .36, 1) var(--reveal-delay, 0ms) both; }
+.motion-pending:focus-within, .motion-enter:focus-within { opacity: 1; translate: none; animation: none; }
+@keyframes sulyap-reveal { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+.home-hero .hero-background { animation: sulyap-landscape 8s ease-out both; }
+@keyframes sulyap-landscape { from { transform: scale(1.06); } to { transform: scale(1); } }
+.page-intro::after { animation: sulyap-botanical 7s ease-in-out 2 alternate; transform-origin: bottom center; }
+@keyframes sulyap-botanical { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+.nav-links a.active::after { transform-origin: left; animation: sulyap-underline .3s ease-out both; }
+@keyframes sulyap-underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.button > svg, .info-icon, .info-chevron, .establishment-icon, .step-number { transition: transform .25s ease, background .25s ease; }
+.button:active, .qr-tools > button:active, .establishment-filters button:active { transform: scale(.97); }
+.establishment-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.establishment-filters button { transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease; }
+.qr-dialog[open], .lightbox[open] { animation: sulyap-dialog .22s ease-out both; }
+dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
+@keyframes sulyap-dialog { from { opacity: 0; } to { opacity: 1; } }
+.lightbox-main > img { animation: sulyap-photo .25s ease-out both; }
+@keyframes sulyap-photo { from { opacity: 0; scale: .98; } to { opacity: 1; scale: 1; } }
+@media (hover: hover) and (pointer: fine) {
+  .destination-card:hover, .establishment-card:hover { transform: translateY(-6px); border-color: #dda0b7; box-shadow: 0 16px 32px rgb(100 49 71 / 12%); }
+  .destination-card:hover .card-image img { transform: scale(1.045); }
+  .establishment-card:hover .establishment-icon { transform: rotate(-7deg); }
+  .information-card:hover .info-icon { transform: rotate(-5deg); }
+  .information-card:hover .info-chevron, .button:hover > svg { transform: translateX(3px); }
+  .steps article:hover .step-number { transform: scale(1.08); background: #fff9f7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-pending, .motion-enter { opacity: 1; translate: none; }
+  .destination-card:hover, .establishment-card:hover, .information-card:hover,
+  .destination-card:hover .card-image img, .gallery-thumb:hover img,
+  .establishment-card:hover .establishment-icon, .information-card:hover .info-icon,
+  .information-card:hover .info-chevron, .button:hover, .button:hover > svg,
+  .button:active, .qr-tools > button:active, .establishment-filters button:active,
+  .steps article:hover .step-number { transform: none; }
+}
+@media print {
+  .motion-pending, .motion-enter { opacity: 1; translate: none; animation: none; }
+}

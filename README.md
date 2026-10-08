@@ -51,6 +51,7 @@ All detail sections have a return link to the destination menu. Unknown pages sh
 ```powershell
 npm run check
 node scripts/check-startup.mjs
+node scripts/check-motion.mjs
 node scripts/smoke.mjs
 python scripts/check-qr.py
 npm run build
@@ -64,6 +65,7 @@ Current attribution, original source pages, and license details are listed at `/
 
 ## Implementation
 - `src/main.jsx`: page templates, routing, navigation, maps, information panels
+- `src/MotionEnhancements.jsx`: staggered scroll reveals with keyboard, reduced-motion, and browser fallback support
 - `src/Establishments.jsx`: establishments directory and category filters
 - `src/establishments.js`: ten source-backed Calapan establishment listings, addresses, and available phone contacts
 - `src/features.jsx`: lightbox galleries and QR display/download/print
@@ -80,3 +82,5 @@ Maps require network access to OpenStreetMap; directions open Google Maps. Fonts
 The seven client information requirements are mapped to the existing sections in `scripts/destination-information-requirements.md`. All ten destinations include specific precautions, transport and return arrangements, local tourism contact assistance, and facilities/accessibility questions. Unknown fees, schedules, and facilities remain clearly qualified rather than presented as confirmed. Tourism office opening hours are labelled separately from destination hours.
 
 The About page has been replaced by Establishments in Calapan. Navigation order is Home, QR Directory, Destinations, Establishments, How It Works. The directory includes CityMall Calapan, Citimart Island Mall, Xentro Mall, Nuciti Calapan, Karaoke City, Starbox KTV Bar & Restaurant, Halcon’s Bar & Resto, Arsenia’s Hapag Kainan sa Kabukiran, Quatro Bella Cafe, and Spice Plates, from their linked Travel Oriental Mindoro listings reviewed October 8, 2026. Bars & Clubs includes bars and karaoke venues; listings do not imply a dance club. Map links search the venue name and listed address without inventing coordinates. Contacts appear only where the source publishes them. Opening hours, menus, rates, and reservations should be confirmed with the venue.
+
+Animations include staggered content entrances, one-time hero landscape easing, a short botanical sway, active navigation underlines, card and icon hover effects, button press feedback, and dialog/gallery transitions. Scroll reveals run once per element and handle new establishment filter results. QR art and QR cards stay steady. Keyboard focus reveals an offscreen target immediately, print styles show all content, and reduced-motion preferences disable animation and movement. Content remains visible when IntersectionObserver is unavailable. Run `node scripts/check-motion.mjs [origin]` against the local server at port 5174 by default or a deployed origin.
