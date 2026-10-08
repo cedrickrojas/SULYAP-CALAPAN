@@ -69,6 +69,14 @@
     "height": 533,
     "position": "50% 50%"
   },
+  "blck-out": {
+    "src": "/images/establishments/blck-out.jpg",
+    "alt": "Client-supplied BLCK OUT Lounge promotional poster with its logo and a nightlife crowd",
+    "width": 1440,
+    "height": 1440,
+    "position": "50% 50%",
+    "fit": "contain"
+  },
   "coastline": {
     "src": "/images/establishments/coastline.webp",
     "alt": "Evening gathering at Coastline Bar & Lounge, published on its official page",

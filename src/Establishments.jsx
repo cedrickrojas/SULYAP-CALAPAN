@@ -9,7 +9,7 @@ const categories = [['all', 'All Establishments'], ['bars', 'Bars & Clubs'], ['r
 function EstablishmentPhoto({place, Icon}) {
   const photo = establishmentImages[place.id];
   const [unavailable, setUnavailable] = useState(false);
-  return <div className="establishment-photo">
+  return <div className={`establishment-photo${photo?.fit === 'contain' ? ' establishment-photo-poster' : ''}`}>
     {photo && !unavailable ? <>
       <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" style={{objectPosition: photo.position}} onError={() => setUnavailable(true)}/>
       <a className="establishment-photo-credit" href={`/photo-credits.html#establishment-${place.id}`} aria-label={`Photo credit for ${place.name}`}>Photo credit <ExternalLink size={12}/></a>
