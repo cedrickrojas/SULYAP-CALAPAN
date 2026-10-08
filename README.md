@@ -44,7 +44,7 @@ Restart Vite or rebuild after changing this value. Print codes from the final or
 - `/how-it-works`
 - `/qr-directory`
 
-All detail sections have a return link to the destination menu. Unknown pages show a useful recovery screen. On a static host, enable SPA fallback: requests that are not files must serve `index.html`. A standard `public/_redirects` file is included for compatible hosts. Verify direct requests to `/destination/5` after deployment.
+All detail sections have a return link to the destination menu. Unknown pages show a useful recovery screen. On a static host, enable SPA fallback: requests that are not files must serve `index.html`. The root `vercel.json` configures the Vite build, `dist` output, and SPA rewrite on Vercel so direct QR links and page reloads load the React app. Set the Vercel project Root Directory to the repository root, where `package.json` and `vercel.json` are located. A standard `public/_redirects` file is included for other compatible hosts. Verify direct requests to `/destination/5` after deployment.
 
 ## Checks
 ```powershell
