@@ -294,7 +294,7 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
 .startup-content { display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center; }
 .startup-logo { width: clamp(160px, 42vw, 210px); height: auto; mix-blend-mode: multiply; animation: sulyap-arrive .7s ease-out both; }
 .startup-progress { width: 120px; height: 3px; border-radius: 999px; overflow: hidden; background: #f1d2df; }
-.startup-progress span { display: block; width: 100%; height: 100%; border-radius: inherit; background: var(--action); transform-origin: left; animation: sulyap-progress 4s linear both; }
+.startup-progress span { display: block; width: 100%; height: 100%; border-radius: inherit; background: var(--action); transform-origin: left; animation: sulyap-progress 2s linear both; }
 .startup-message { font-family: 'Playfair Display', Georgia, serif; color: var(--action); font-size: .94rem; font-style: italic; }
 @keyframes sulyap-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes sulyap-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -409,3 +409,20 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
 @media (hover: hover) and (pointer: fine) { .establishment-card:hover .establishment-photo-poster > img { transform: none; } }
 @media (max-width: 720px) { .establishment-body { padding: 24px; } }
 @media (prefers-reduced-motion: reduce) { .establishment-card:hover .establishment-photo > img { transform: none; } }
+
+.home-hero-brand { min-height: 650px; color: var(--ink); background: radial-gradient(ellipse at 78% 45%, #fce4ed, transparent 60%), #fff9f7; border: 1px solid var(--line); }
+.home-hero-brand .hero-layout { min-height: inherit; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: 48px; padding-block: 48px; }
+.home-hero-brand .hero-content { padding: 0; min-width: 0; }
+.home-hero-brand .hero-content h1 { font-size: clamp(3rem, 6.5vw, 5.7rem); text-shadow: none; }
+.home-hero-brand .hero-content h1 em { color: var(--action); }
+.home-hero-brand .hero-content > p:not(.eyebrow) { color: var(--muted); }
+.home-hero-brand .hero-brand-logo { position: static; inset: auto; z-index: auto; width: 100%; height: auto; max-width: 480px; max-height: 560px; object-fit: contain; justify-self: center; mix-blend-mode: multiply; }
+@media (max-width: 960px) {
+  .home-hero-brand { min-height: 0; }
+  .home-hero-brand .hero-layout { min-height: 0; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 36px 44px; }
+  .home-hero-brand .hero-brand-logo { order: -1; max-width: 220px; }
+  .home-hero-brand .hero-content { text-align: center; }
+  .home-hero-brand .hero-content h1 { font-size: clamp(2.6rem, 9vw, 4.1rem); }
+  .home-hero-brand .hero-content > p:not(.eyebrow) { margin-inline: auto; }
+  .home-hero-brand .eyebrow, .home-hero-brand .hero-actions { justify-content: center; }
+}
