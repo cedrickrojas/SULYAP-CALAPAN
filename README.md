@@ -4,7 +4,7 @@ A responsive React + Vite + Tailwind tourism website featuring the ten client-se
 
 Home presents the destination-photo hero shown in the client's reference, with the shared navigation and footer. Explore Destinations opens the ten-place directory, and Discover More opens About. The directory, project information, and QR instructions remain accessible on their own pages.
 
-The navigation order is Home, QR Directory, Destinations, About, and How It Works. QR and destination directories retain their separate pages. Each destination's Information section includes a detailed three-paragraph description, with dated reports distinguished from current access or operating arrangements.
+The navigation order is Home, QR Directory, Destinations, About, and How It Works. All five links stay visible at the top on desktop and mobile, wrapping below the logo on smaller screens without a hamburger menu. QR entry and section anchors account for the header height so content stays visible below the navigation. QR and destination directories retain their separate pages. Each destination's Information section includes a detailed three-paragraph description, with dated reports distinguished from current access or operating arrangements.
 
 On opening or reloading the React website, a four-second startup screen displays the Sulyap logo with a subtle progress bar. Internal page navigation does not restart it. Direct destination and QR links retain their requested page and information-menu anchor after the startup screen. Animations respect reduced-motion preferences.
 

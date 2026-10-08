@@ -31,12 +31,13 @@ try {
   assert.equal(await page.locator('footer .logo, footer .brand-artwork, footer img').count(),0);
   if(mobile){
    assert.ok(page.url().endsWith('/destination/7#information'));
-   await page.waitForFunction(()=>{const top=document.getElementById('information').getBoundingClientRect().top;return top>=0&&top<140;});
+   await page.waitForFunction(()=>{const top=document.getElementById('information').getBoundingClientRect().top;const headerBottom=document.querySelector('.navbar').getBoundingClientRect().bottom;return top>=headerBottom&&top<headerBottom+48;});
    await page.locator('.information-card').first().click();
    assert.ok(page.url().endsWith('/destination/7/background'));
   }else{
    await page.locator('.hero-actions').getByRole('link',{name:'Explore Destinations'}).click();
    assert.ok(page.url().endsWith('/destinations'));
+   await page.locator('.destination-card').first().waitFor();
    assert.equal(await page.locator('.destination-card').count(),10);
   }
   assert.equal(await page.locator('.startup-screen').count(),0);
