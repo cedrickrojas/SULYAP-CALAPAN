@@ -2,17 +2,17 @@
 
 The seven content requirements in the client's questionnaire apply to all ten selected destinations. The questionnaire's evaluation instructions and rating boxes are not website features.
 
-| Client requirement | Website section |
+| Client requirement | Clickable title and included information |
 | --- | --- |
-| Destination information and description | Destination Information: introduction and background |
-| Operating hours and fees | Operating Hours; Entrance Fees & Rates |
-| Available activities | Available Activities; Attractions |
-| Destination images | Existing hero and Destination Gallery, with a direct gallery link |
-| Precautionary measures | Precautions & Rules: destination-specific precautions, existing rules, emergency assistance |
-| Contact details and information | Contact Details: destination contact where published, Calapan tourism assistance, office address/hours, telephone/email links |
-| Transportation details | Transportation & Directions: arrival in Calapan, local options, routes, fare/booking questions, return arrangements |
+| Destination information and description | Destination Information and Description: introduction, background, best time to visit, nearby places |
+| Operating hours and fees | Operating Hours and Fees: destination schedule, admission and activity rates, confirmation advice |
+| Available activities | Available Activities: things to do and attractions |
+| Destination images | Destination Images: three-photo gallery with captions and lightbox controls |
+| Precautionary measures | Precautionary Measures: specific precautions, rules, travel tips, facilities/accessibility planning, emergency assistance |
+| Contact details and information | Contact Details and Information: published destination contact, tourism assistance, office address/hours, telephone/email links |
+| Transportation details | Destination Transportation Details: address, coordinates and map, arrival in Calapan, local options, routes, fares/booking, return arrangements |
 
-Additional practical information appears in Travel Tips: facilities to confirm, accessibility questions, packing, and group visits. Advice is tailored to each destination; it does not claim unverified facilities exist.
+All ten destinations use these seven menu cards. Planning advice does not claim unverified facilities exist.
 
 ## Sources checked on 8 October 2026
 
@@ -25,4 +25,4 @@ Exact current admission/activity prices, local travel times, landing permissions
 
 ## Implementation
 
-`src/destinations.js` keeps the existing IDs, slugs, content fields, and routes. It adds practical visitor information from `src/visitor-details.js` to the same destination records. All twelve information routes, maps, three-slot galleries, and QR behavior are retained. Photographs and their attribution are unchanged by this information update.
+`src/destinations.js` keeps the existing IDs, slugs, content fields, and routes. It adds practical visitor information from `src/visitor-details.js` to the same destination records. Seven information routes group the existing content. Old location, fee, attraction, best-time, travel-tip, and nearby-place routes redirect to their combined sections. Maps, three-slot galleries, stable destination URLs, and QR behavior are retained. Photographs and their attribution are unchanged by this information update.

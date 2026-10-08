@@ -1,11 +1,20 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {BrowserRouter,Routes,Route,Link,NavLink,useLocation,useParams} from 'react-router-dom';
-import {MapPin,Compass,QrCode,BookOpen,Route as RouteIcon,Sparkles,Clock,Wallet,Sun,ShieldCheck,Lightbulb,Phone,Hotel,ChevronLeft,ChevronRight,ExternalLink,Smartphone,Leaf,Check,Camera} from 'lucide-react';
+import {BrowserRouter,Routes,Route,Link,NavLink,Navigate,useLocation,useParams} from 'react-router-dom';
+import {MapPin,Compass,QrCode,BookOpen,Route as RouteIcon,Clock,Sun,ShieldCheck,Lightbulb,Phone,ChevronLeft,ChevronRight,ExternalLink,Smartphone,Leaf,Check,Camera} from 'lucide-react';
 import {destinations,getDestination} from './destinations';
 import {PhotoGallery,QRCodeImage,QRCodeCard,QRModal} from './features';
 import './styles.css';
-const sections=[['background','Destination Information','Description & background',BookOpen],['location','Location & Address','Find your place on the map',MapPin],['directions','Transportation & Directions','Routes, fares & return journey',RouteIcon],['thingsToDo','Available Activities','Things to do during your visit',Compass],['attractions','Attractions','The highlights to discover',Sparkles],['operatingHours','Operating Hours','Plan the right time',Clock],['entranceFee','Entrance Fees & Rates','Know before you go',Wallet],['bestTimeToVisit','Best Time to Visit','Find your perfect season',Sun],['rules','Precautions & Rules','Safety & responsible travel',ShieldCheck],['travelTips','Travel Tips','A little local wisdom',Lightbulb],['contactInformation','Contact Details','Destination & tourism assistance',Phone],['nearbyPlaces','Nearby Places','Keep the adventure going',Hotel]];
+const sections=[
+ ['background','Destination Information and Description','Background, best time to visit & nearby places',BookOpen],
+ ['operatingHours','Operating Hours and Fees','Schedules, admission & activity charges',Clock],
+ ['thingsToDo','Available Activities','Activities & attractions',Compass],
+ ['images','Destination Images','Photos of the destination',Camera],
+ ['rules','Precautionary Measures','Safety, rules & practical travel tips',ShieldCheck],
+ ['contactInformation','Contact Details and Information','Destination contacts & tourism assistance',Phone],
+ ['directions','Destination Transportation Details','Map, address, routes & return journey',RouteIcon],
+];
+const legacySections={location:'directions',entranceFee:'operatingHours',attractions:'thingsToDo',bestTimeToVisit:'background',travelTips:'rules',nearbyPlaces:'background'};
 const num=id=>String(id).padStart(2,'0');
 const mapsUrl=d=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name+", Calapan City, Oriental Mindoro")}`;
 const directionsUrl=d=>`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(d.directionsQuery||d.name+", "+d.address)}`;
@@ -41,21 +50,59 @@ function ContactDetails({contact}){return <div className="contact-details"><h2>{
 function EmergencyHelp({information}){return <aside className="practical-info emergency-help" aria-label="Emergency assistance"><h2><Phone size={21}/> Emergency Assistance</h2><p>{information.description}</p><a className="button outline" href={'tel:'+information.phone}>Call {information.phone}</a><a className="text-link" href={information.source.url} target="_blank" rel="noreferrer">{information.source.title} <ExternalLink size={13}/></a></aside>;}
 function InformationSection(){
  const{id,section}=useParams();
- const d=getDestination(id),s=sections.find(x=>x[0]===section);
- if(!d||!s)return <NotFound/>;
- const[,title,,Icon]=s,content=d[section];
+ const d=getDestination(id);
+ if(!d)return <NotFound/>;
+ if(Object.hasOwn(legacySections,section))return <Navigate replace to={`${d.qrCodeUrl}/${legacySections[section]}`}/>;
+ const s=sections.find(x=>x[0]===section);
+ if(!s)return <NotFound/>;
+ const[,title,,Icon]=s;
  return <div className="container info-detail">
   <Link to={d.qrCodeUrl+'#information'} className="back-link"><ChevronLeft size={17}/> Back to Destination</Link>
-  <div className="detail-heading"><span className="feature-icon"><Icon size={26}/></span><div><Eyebrow>{d.name} · DESTINATION {num(d.id)}</Eyebrow><h1>{title}</h1></div></div>
+  <div className="detail-heading"><span className="feature-icon"><Icon size={26}/></span><div><Eyebrow>{d.name} ? DESTINATION {num(d.id)}</Eyebrow><h1>{title}</h1></div></div>
   <div className="detail-layout"><article className="detail-content">
-   {section==='location'?<MapSection destination={d}/>:
-    section==='background'?<><p className="detail-prose destination-summary">{d.description}</p><h2>About the Destination</h2>{content.split(/\n\s*\n/).map((paragraph,i)=><p className="detail-prose" key={i}>{paragraph}</p>)}<Link className="button outline" to={d.qrCodeUrl+'#gallery'}><Camera size={17}/> View Destination Gallery</Link></>:
-    section==='directions'?<><dl className="directions-list">{Object.entries(content).map(([key,value])=><div key={key}><dt>{directionLabels[key]||key}</dt><dd>{value}</dd></div>)}</dl><p className="small-copy">Journey times are planning estimates. Confirm current schedules, fares, the entrance or boat meeting point, and your return arrangements before departure.</p><a href={directionsUrl(d)} className="button" target="_blank" rel="noreferrer">{d.directionsQuery?"Find Tourism Office":"Get Google Maps Directions"} <ExternalLink size={16}/></a></>:
-    section==='rules'?<><h2>Precautionary Measures</h2><p className="small-copy">Practical precautions for planning your visit; follow current instructions from site staff and local operators.</p><DetailList items={d.precautionaryMeasures}/><h2 className="detail-subheading">Rules & Responsible Travel</h2><DetailList items={content}/><EmergencyHelp information={d.emergencyInformation}/></>:
-    section==='contactInformation'?<><p className="small-copy">Contacts are listed in the tourism resources below. Confirm that the number is still in use before arranging your visit.</p><ContactDetails contact={content}/>{content.office!==d.tourismAssistance.office?<section className="practical-info"><p className="eyebrow">LOCAL TRAVEL ASSISTANCE</p><ContactDetails contact={d.tourismAssistance}/></section>:<p className="small-copy">This is a tourism assistance contact, rather than a confirmed on-site operator. Ask the office to connect you with the destination or a currently authorized community host.</p>}<section className="practical-info"><h2>What to Ask Before Visiting</h2><p>Confirm opening hours, admission and activity charges, current access, permits, facilities, and accessibility. For boat or community tours, ask about the operator, passenger limits, meeting point, weather policy, and return journey.</p></section><EmergencyHelp information={d.emergencyInformation}/></>:
-    section==='travelTips'?<><DetailList items={content}/><section className="practical-info"><h2>A Little Planning Goes a Long Way</h2><dl className="directions-list">{Object.entries(d.visitorPlanning).map(([key,value])=><div key={key}><dt>{planningLabels[key]||key}</dt><dd>{value}</dd></div>)}</dl></section></>:
-    Array.isArray(content)?<DetailList items={content}/>:<p className="detail-prose">{content}</p>}
-   {(section==='operatingHours'||section==='entranceFee')&&<section className="practical-info"><h2>Confirm Before You Go</h2><p>{section==='operatingHours'?'Ask about your intended date, last admission, holidays, and any weather or event restrictions. For boat trips, confirm the departure and mainland return time.':'Ask for the total cost, whether charges are per person or per group, what is included, and any booking or cancellation terms. A free-admission listing does not confirm free transport, guides, or rentals.'}</p><Link className="text-link" to={d.qrCodeUrl+'/contactInformation'}>Contact the Destination <ChevronRight size={16}/></Link></section>}
+   {section==='background'&&<>
+    <p className="detail-prose destination-summary">{d.description}</p>
+    <h2>About the Destination</h2>
+    {d.background.split(/\n\s*\n/).map((paragraph,i)=><p className="detail-prose" key={i}>{paragraph}</p>)}
+    <h2 className="detail-subheading">Best Time to Visit</h2><p className="detail-prose">{d.bestTimeToVisit}</p>
+    <h2 className="detail-subheading">Nearby Places</h2><DetailList items={d.nearbyPlaces}/>
+    <Link className="button outline" to={d.qrCodeUrl+'/images'}><Camera size={17}/> View Destination Images</Link>
+   </>}
+   {section==='operatingHours'&&<>
+    <h2>Operating Hours</h2><p className="detail-prose">{d.operatingHours}</p>
+    <h2 className="detail-subheading">Entrance Fees and Rates</h2><p className="detail-prose">{d.entranceFee}</p>
+    <section className="practical-info"><h2>Confirm Before You Go</h2>
+     <p>Ask about your intended date, last admission, holidays, and any weather or event restrictions. For boat trips, confirm the departure and mainland return time.</p>
+     <p>Ask for the total cost, whether charges are per person or per group, what is included, and any booking or cancellation terms. A free-admission listing does not confirm free transport, guides, or rentals.</p>
+     <Link className="text-link" to={d.qrCodeUrl+'/contactInformation'}>Contact the Destination <ChevronRight size={16}/></Link>
+    </section>
+   </>}
+   {section==='thingsToDo'&&<>
+    <h2>Things to Do</h2><DetailList items={d.thingsToDo}/>
+    <h2 className="detail-subheading">Attractions</h2><DetailList items={d.attractions}/>
+   </>}
+   {section==='images'&&<PhotoGallery destination={d} embedded/>}
+   {section==='rules'&&<>
+    <h2>Precautionary Measures</h2><p className="small-copy">Practical precautions for planning your visit; follow current instructions from site staff and local operators.</p><DetailList items={d.precautionaryMeasures}/>
+    <h2 className="detail-subheading">Rules and Responsible Travel</h2><DetailList items={d.rules}/>
+    <h2 className="detail-subheading">Travel Tips</h2><DetailList items={d.travelTips}/>
+    <section className="practical-info"><h2>Facilities and Visitor Planning</h2><dl className="directions-list">{Object.entries(d.visitorPlanning).map(([key,value])=><div key={key}><dt>{planningLabels[key]||key}</dt><dd>{value}</dd></div>)}</dl></section>
+    <EmergencyHelp information={d.emergencyInformation}/>
+   </>}
+   {section==='contactInformation'&&<>
+    <p className="small-copy">Contacts are listed in the tourism resources below. Confirm that the number is still in use before arranging your visit.</p>
+    <ContactDetails contact={d.contactInformation}/>
+    {d.contactInformation.office!==d.tourismAssistance.office?<section className="practical-info"><p className="eyebrow">LOCAL TRAVEL ASSISTANCE</p><ContactDetails contact={d.tourismAssistance}/></section>:<p className="small-copy">This is a tourism assistance contact, rather than a confirmed on-site operator. Ask the office to connect you with the destination or a currently authorized community host.</p>}
+    <section className="practical-info"><h2>What to Ask Before Visiting</h2><p>Confirm opening hours, admission and activity charges, current access, permits, facilities, and accessibility. For boat or community tours, ask about the operator, passenger limits, meeting point, weather policy, and return journey.</p></section>
+    <EmergencyHelp information={d.emergencyInformation}/>
+   </>}
+   {section==='directions'&&<>
+    <h2>Location and Map</h2><MapSection destination={d}/>
+    <h2 className="detail-subheading">Transportation and Directions</h2>
+    <dl className="directions-list">{Object.entries(d.directions).map(([key,value])=><div key={key}><dt>{directionLabels[key]||key}</dt><dd>{value}</dd></div>)}</dl>
+    <p className="small-copy">Journey times are planning estimates. Confirm current schedules, fares, the entrance or boat meeting point, and your return arrangements before departure.</p>
+    <a href={directionsUrl(d)} className="button" target="_blank" rel="noreferrer">{d.directionsQuery?"Find Tourism Office":"Get Google Maps Directions"} <ExternalLink size={16}/></a>
+   </>}
    <div className="sources"><span>Further reading</span>{d.sources.map(source=><a href={source.url} key={source.url} target="_blank" rel="noreferrer">{source.title}<ExternalLink size={13}/></a>)}</div>
    <Link className="button outline" to={d.qrCodeUrl+'#information'}><ChevronLeft size={17}/> Back to Destination</Link>
   </article><aside className="detail-destination-card"><img src={d.images[0].src} alt={d.images[0].alt}/><div><p className="eyebrow">DESTINATION {num(d.id)}</p><h3>{d.name}</h3><p><MapPin size={14}/>{d.municipality}, {d.province}</p><Link className="text-link" to={d.qrCodeUrl}>Explore This Destination <Compass size={16}/></Link></div></aside></div>
@@ -63,7 +110,7 @@ function InformationSection(){
 }
 function QRDirectory(){const local=['localhost','127.0.0.1'].includes(window.location.hostname)&&!import.meta.env.VITE_PUBLIC_SITE_URL;return <><PageIntro eyebrow="SMALL CODE. BIG DISCOVERY." title={<>QR Code <em>Directory</em></>} description="One unique code for every destination. Download, print, and place each code where the journey begins."/>{local&&<div className="container"><p className="local-notice"><Lightbulb size={20}/> These preview codes point to this computer. Set your public website address before printing codes for visitors.</p></div>}<section className="container qr-directory"><div className="qr-directory-intro"><span><ShieldCheck size={18}/> Every code opens its destination directly.</span><Link to="/how-it-works" className="text-link">How does it work?</Link></div><div className="qr-grid">{destinations.map(d=><QRCodeCard destination={d} key={d.id}/>)}</div></section></>;}
 function About(){return <><PageIntro eyebrow="THE IDEA BEHIND SULYAP" title={<>Closer to the place.<br/><em>Connected to its story.</em></>} description="A convenient, accessible digital tourism guide for meaningful journeys in Calapan City."/><section className="container about-page"><div className="about-split"><div className="about-photo"><img src="/images/calapan-city-plaza-1.jpg" alt="Calapan City Plaza in Oriental Mindoro" loading="lazy"/></div><div className="about-copy"><h2>Discovery,<br/><em>made accessible.</em></h2><p>This project helps visitors find destination backgrounds, locations, directions, attractions, and practical travel information using their smartphones.</p><p>At a tourist site, a QR code opens that place’s guide immediately. From home, the directory offers a window into the ten selected Calapan destinations.</p><p>Information is a starting point for planning. Check current fees, schedules, permits, and local conditions with the tourism office or your operator.</p><Link className="button" to="/destinations">Explore the Destinations</Link></div></div><Features/></section><TravelTips destination={destinations[0]}/><section className="section container about-end"><Eyebrow>DESIGNED FOR DISCOVERY</Eyebrow><h2>One guide. <em>Many perspectives.</em></h2><p>Built as an academic tourism project, Sulyap combines destination storytelling with a simple scan-to-explore experience. The guide features ten selected destinations in Calapan City, Oriental Mindoro, from cultural landmarks to coastal and conservation sites.</p><Link to="/how-it-works" className="button outline">Explore the QR Experience</Link></section></>;}
-function HowItWorks(){return <><PageIntro eyebrow="DISCOVERY, SIMPLIFIED" title={<>Scan. Explore.<br/><em>Experience.</em></>} description="You’re standing somewhere special. Get to know it with one simple scan."/><section className="container how-section"><div className="how-top"><div className="scan-card large"><QRCodeImage destination={destinations[0]}/><span className="scan-label">TRY IT WITH YOUR CAMERA</span><strong>Discover {destinations[0].name}</strong></div><div><Steps/><div className="how-note"><Lightbulb size={22}/><p>No extra app needed. Use your phone’s camera, tap the link, and choose a destination information card. An internet connection is needed to load the guide.</p></div></div></div><div className="how-bottom"><h2>The right place.<br/><em>The right information.</em></h2><p>Each QR code has a unique destination link. You’ll go directly to the place you scanned, then choose its background, map, directions, attractions, visitor information, or gallery.</p><Link className="button" to="/qr-directory"><QrCode size={18}/> View QR Directory</Link></div></section></>;}
+function HowItWorks(){return <><PageIntro eyebrow="DISCOVERY, SIMPLIFIED" title={<>Scan. Explore.<br/><em>Experience.</em></>} description="You’re standing somewhere special. Get to know it with one simple scan."/><section className="container how-section"><div className="how-top"><div className="scan-card large"><QRCodeImage destination={destinations[0]}/><span className="scan-label">TRY IT WITH YOUR CAMERA</span><strong>Discover {destinations[0].name}</strong></div><div><Steps/><div className="how-note"><Lightbulb size={22}/><p>No extra app needed. Use your phone’s camera, tap the link, and choose a destination information card. An internet connection is needed to load the guide.</p></div></div></div><div className="how-bottom"><h2>The right place.<br/><em>The right information.</em></h2><p>Each QR code has a unique destination link. You’ll go directly to the place you scanned, then choose from seven sections for its description, hours and fees, activities, images, precautions, contacts, or transportation details.</p><Link className="button" to="/qr-directory"><QrCode size={18}/> View QR Directory</Link></div></section></>;}
 function NotFound(){return <section className="container not-found"><Compass size={52}/><Eyebrow>A SMALL DETOUR</Eyebrow><h1>This place isn’t on the map.</h1><p>The destination or information section could not be found.</p><Link className="button" to="/destinations">Explore Destinations</Link></section>;}
 function LoadingScreen(){return <div className="startup-screen" role="status" aria-label="Loading Sulyap"><div className="startup-content"><img className="startup-logo" src="/branding/sulyap-logo.svg" alt="Sulyap Calapan" width="995" height="1060" fetchPriority="high"/><div className="startup-progress" aria-hidden="true"><span/></div><span className="startup-message">Discover. Explore. Experience.</span></div></div>;}
 function App(){const[loading,setLoading]=useState(true);useEffect(()=>{const timer=window.setTimeout(()=>setLoading(false),4000);return()=>window.clearTimeout(timer);},[]);if(loading)return <LoadingScreen/>;return <BrowserRouter><ScrollAndTitle/><a className="skip-link" href="#main-content">Skip to content</a><Navbar/><main id="main-content"><Routes><Route path="/" element={<Home/>}/><Route path="/destinations" element={<Directory/>}/><Route path="/destination/:id" element={<DestinationPage/>}/><Route path="/destination/:id/:section" element={<InformationSection/>}/><Route path="/about" element={<About/>}/><Route path="/how-it-works" element={<HowItWorks/>}/><Route path="/qr-directory" element={<QRDirectory/>}/><Route path="*" element={<NotFound/>}/></Routes></main><Footer/></BrowserRouter>;}

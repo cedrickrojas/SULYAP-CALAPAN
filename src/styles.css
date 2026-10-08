@@ -312,3 +312,7 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
   .navbar .nav-links a.active::after { left: 4px; right: 4px; }
   .navbar .brand-artwork, .compact .brand-artwork { width: 48px; }
 }
+
+.detail-gallery { margin-bottom: 36px; }
+.detail-gallery .section-heading { margin-bottom: 24px; }
+.detail-gallery .section-heading h2 { font-size: 1.8rem; }
