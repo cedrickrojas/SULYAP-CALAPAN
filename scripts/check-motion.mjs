@@ -26,7 +26,7 @@ try {
   await open('/');
   await expect(page.locator('.hero-content h1')).toHaveClass(/motion-enter/);
   await expect(page.locator('.hero-content h1')).toHaveCSS('animation-name', 'sulyap-reveal');
-  await expect(page.locator('.hero-background')).toHaveCSS('animation-name', 'sulyap-landscape');
+  await expect(page.locator('.hero-collage-tile img').first()).toHaveCSS('animation-name', 'sulyap-landscape');
   await settled(page.locator('.hero-content h1'));
   await page.locator('nav').getByRole('link', {name: 'Destinations', exact: true}).click();
   await expect(page.locator('.destination-card')).toHaveCount(10);
