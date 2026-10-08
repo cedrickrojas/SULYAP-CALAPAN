@@ -2,6 +2,30 @@
 // Keep venue details tied to the linked source; do not infer opening hours or rates.
 export const establishments = [
   {
+    id: 'citymall', name: 'CityMall Calapan', category: 'malls', type: 'Mall & shopping center',
+    description: 'A shopping mall in Ilaya, listed in the Calapan tourism shopping directory.',
+    address: 'Ilaya, Calapan City, Oriental Mindoro', phone: '(043) 441-9010', telephone: '+63434419010',
+    source: 'https://www.travelorientalmindoro.ph/place/citymall-calapan',
+  },
+  {
+    id: 'citimart', name: 'Citimart Island Mall', category: 'malls', type: 'Mall & shopping center',
+    description: 'Find this Calapan shopping mall in San Vicente North.',
+    address: 'San Vicente North, Calapan City, Oriental Mindoro', phone: '(043) 288-6223', telephone: '+63432886223',
+    source: 'https://www.travelorientalmindoro.ph/place/citimart-island-mall',
+  },
+  {
+    id: 'xentro', name: 'Xentro Mall', category: 'malls', type: 'Mall & shopping center',
+    description: 'A Lumangbayan mall listed among Calapan City shopping centers.',
+    address: 'Lumangbayan, Calapan City, Oriental Mindoro', phone: '0995 198 9923', telephone: '+639951989923',
+    source: 'https://www.travelorientalmindoro.ph/place/xentro-mall',
+  },
+  {
+    id: 'nuciti', name: 'Nuciti Calapan', category: 'malls', type: 'Mall & shopping center',
+    description: 'A shopping and retail establishment in Camilmil, Calapan City.',
+    address: 'Camilmil, Calapan City, Oriental Mindoro', phone: '(043) 441-6463', telephone: '+63434416463',
+    source: 'https://www.travelorientalmindoro.ph/place/nuciti-calapan',
+  },
+  {
     id: 'karaoke-city', name: 'Karaoke City', category: 'bars', type: 'Karaoke & nightlife',
     description: 'A karaoke venue listed at the Filipiniana Complex for your next Calapan get-together.',
     address: 'Unit 14, Filipiniana Complex, Nacoco, Calapan City, Oriental Mindoro',

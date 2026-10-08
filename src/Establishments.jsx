@@ -1,8 +1,8 @@
 import {useSearchParams} from 'react-router-dom';
-import {MapPin, Phone, Utensils, Wine, ExternalLink} from 'lucide-react';
+import {MapPin, Phone, Utensils, Wine, ShoppingBag, ExternalLink} from 'lucide-react';
 import {establishments} from './establishments.js';
 
-const categories = [['all', 'All Establishments'], ['bars', 'Bars & Clubs'], ['restaurants', 'Restaurants']];
+const categories = [['all', 'All Establishments'], ['bars', 'Bars & Clubs'], ['restaurants', 'Restaurants'], ['malls', 'Malls']];
 
 export default function Establishments() {
   const [params, setParams] = useSearchParams();
@@ -11,9 +11,9 @@ export default function Establishments() {
 
   return <>
     <section className="page-intro container">
-      <p className="eyebrow"><span/>EAT, UNWIND & CONNECT</p>
+      <p className="eyebrow"><span/>EAT, SHOP & UNWIND</p>
       <h1>Establishments <em>in Calapan.</em></h1>
-      <p>Find restaurants, bars, and nightlife venues to complete your Calapan visit. Choose a category and discover a place to share a meal or spend the evening.</p>
+      <p>Find restaurants, bars, nightlife venues, and malls to complete your Calapan visit. Choose a category and discover a place to dine, shop, or unwind.</p>
     </section>
     <section className="container establishments-section" aria-label="Calapan establishments directory">
       <div className="establishments-toolbar">
@@ -24,7 +24,7 @@ export default function Establishments() {
       </div>
       <div className="establishment-grid">
         {visible.map(place => {
-          const Icon = place.category === 'bars' ? Wine : Utensils;
+          const Icon = place.category === 'bars' ? Wine : place.category === 'malls' ? ShoppingBag : Utensils;
           const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.address}`)}`;
           return <article className="establishment-card" key={place.id}>
             <div className="establishment-heading"><span className="establishment-icon"><Icon size={25} aria-hidden="true"/></span><span className="establishment-type">{place.type}</span></div>
@@ -38,7 +38,7 @@ export default function Establishments() {
           </article>;
         })}
       </div>
-      <div className="establishments-note"><p>Planning a visit? Check current opening hours, menus, rates, and reservations with the establishment.</p><p>Listings from <a href="https://www.travelorientalmindoro.ph/dining/in/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
+      <div className="establishments-note"><p>Planning a visit? Check current opening hours, store availability, menus, rates, and reservations with the establishment.</p><p>Listings from <a href="https://www.travelorientalmindoro.ph/municipality/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
     </section>
   </>;
 }
