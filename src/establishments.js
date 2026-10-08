@@ -1,5 +1,6 @@
 // Published Travel Oriental Mindoro listings reviewed October 8, 2026.
-// Keep venue details tied to the linked source; do not infer opening hours or rates.
+// Coastline and BLCK OUT locations were supplied by the client.
+// Keep published details tied to their source; do not infer hours, rates, or contacts.
 export const establishments = [
   {
     id: 'citymall', name: 'CityMall Calapan', category: 'malls', type: 'Mall & shopping center',
@@ -24,6 +25,16 @@ export const establishments = [
     description: 'A shopping and retail establishment in Camilmil, Calapan City.',
     address: 'Camilmil, Calapan City, Oriental Mindoro', phone: '(043) 441-6463', telephone: '+63434416463',
     source: 'https://www.travelorientalmindoro.ph/place/nuciti-calapan',
+  },
+  {
+    id: 'coastline', name: 'Coastline Bar & Lounge', category: 'bars', type: 'Bar & lounge',
+    description: 'A bar and lounge in Pachoca, Calapan City.',
+    address: 'Pachoca, Calapan City, Oriental Mindoro',
+  },
+  {
+    id: 'blck-out', name: 'BLCK OUT', category: 'bars', type: 'Bar & nightlife',
+    description: 'A nightlife venue near Gaisano in Calapan City.',
+    address: 'Near Gaisano, Calapan City, Oriental Mindoro',
   },
   {
     id: 'karaoke-city', name: 'Karaoke City', category: 'bars', type: 'Karaoke & nightlife',

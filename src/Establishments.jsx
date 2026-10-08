@@ -34,11 +34,11 @@ export default function Establishments() {
               <p><MapPin size={17} aria-hidden="true"/><span>{place.address}</span></p>
               {place.phone && <a href={`tel:${place.telephone}`} aria-label={`Call ${place.name}: ${place.phone}`}><Phone size={17} aria-hidden="true"/>{place.phone}</a>}
             </div>
-            <div className="establishment-actions"><a className="button outline small" href={map} target="_blank" rel="noreferrer" aria-label={`Find ${place.name} on Google Maps`}>View Map <ExternalLink size={14}/></a><a className="establishment-source" href={place.source} target="_blank" rel="noreferrer" aria-label={`Tourism listing for ${place.name}`}>Tourism listing <ExternalLink size={12}/></a></div>
+            <div className="establishment-actions"><a className="button outline small" href={map} target="_blank" rel="noreferrer" aria-label={`Find ${place.name} on Google Maps`}>View Map <ExternalLink size={14}/></a>{place.source && <a className="establishment-source" href={place.source} target="_blank" rel="noreferrer" aria-label={`Tourism listing for ${place.name}`}>Tourism listing <ExternalLink size={12}/></a>}</div>
           </article>;
         })}
       </div>
-      <div className="establishments-note"><p>Planning a visit? Check current opening hours, store availability, menus, rates, and reservations with the establishment.</p><p>Listings from <a href="https://www.travelorientalmindoro.ph/municipality/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
+      <div className="establishments-note"><p>Planning a visit? Check current opening hours, store availability, menus, rates, and reservations with the establishment.</p><p>Tourism reference: <a href="https://www.travelorientalmindoro.ph/municipality/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
     </section>
   </>;
 }
