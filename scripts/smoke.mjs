@@ -48,7 +48,7 @@ await openPage(page,origin+"/destination/"+destinations[0].slug);assert.equal(aw
 await page.locator('.gallery-thumb').first().click();await page.locator('dialog.lightbox[open]').waitFor();await page.getByRole('button',{name:'Next photo'}).click();assert.ok((await page.locator('.lightbox-caption').innerText()).includes('2 / 3'));await page.keyboard.press('ArrowLeft');assert.ok((await page.locator('.lightbox-caption').innerText()).includes('1 / 3'));await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0);
 await openPage(page,origin+'/destinations');assert.equal(await page.locator('.destination-card').count(),10);await page.getByRole('button',{name:"View QR code for "+destinations[0].name}).click();await page.locator('.qr-dialog[open]').waitFor();await page.getByRole('button',{name:'Close QR code'}).click();assert.equal(await page.locator('dialog[open]').count(),0);
 await openPage(page,origin+'/qr-directory');await page.waitForFunction(()=>document.querySelectorAll('.qr-card .qr-image').length===10);
-for(let i=0;i<10;i++){const card=page.locator('.qr-card').nth(i);assert.equal(await card.locator('a.button').getAttribute('href'),destinations[i].qrCodeUrl+'#information');await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});}
+for(let i=0;i<10;i++){const card=page.locator('.qr-card').nth(i);assert.equal(await card.locator('a').count(),0,'QR cards should open destinations through scanning');await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});}
 const scannedPage=await context.newPage();await scannedPage.setViewportSize({width:390,height:844});
 for(const d of destinations){
  await openPage(scannedPage,origin+d.qrCodeUrl+'#information');

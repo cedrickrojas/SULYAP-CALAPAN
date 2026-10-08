@@ -9,7 +9,7 @@ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors
 const origin='http://127.0.0.1:5173';
 async function noOverflow(){assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1),'Horizontal overflow at '+page.url());}
 await page.goto(origin+'/qr-directory');await page.waitForFunction(()=>document.querySelectorAll('.qr-card .qr-image').length===10);
-for(let i=0;i<10;i++){const card=page.locator('.qr-card').nth(i);assert.equal(await card.locator('a.button').getAttribute('href'),destinations[i].qrCodeUrl+'#information');await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});}
+for(let i=0;i<10;i++){const card=page.locator('.qr-card').nth(i);assert.equal(await card.locator('a').count(),0,'QR cards should open destinations through scanning');await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});}
 const scannedPage=await context.newPage();await scannedPage.setViewportSize({width:390,height:844});
 for(const d of destinations){
  await scannedPage.goto(origin+d.qrCodeUrl+'#information');
