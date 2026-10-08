@@ -60,7 +60,8 @@ p { line-height: 1.85; }
 .eyebrow > span { width: 28px; }
 
 /* Cream navigation and an understated mountain brand mark. */
-.navbar { background: rgb(255 253 252 / 96%); backdrop-filter: blur(16px); }
+.navbar { background: rgb(255 253 252 / 96%); backdrop-filter: blur(16px); transition: background .25s, border-color .25s; }
+.navbar.compact { background: rgb(255 253 252 / 45%); border-bottom-color: transparent; }
 .logo { font-family: 'Playfair Display', Georgia, serif; font-size: 2.1rem; font-weight: 600; gap: 11px; }
 .logo small { font-family: 'Poppins', sans-serif; color: var(--muted); font-size: .5rem; letter-spacing: .17em; margin-top: 8px; }
 .logo-mark { width: 43px; height: 43px; color: var(--action); background: var(--soft); border-color: #ebbed0; }
@@ -305,6 +306,9 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
 .compact .brand-artwork { width: 66px; }
 .footer-brand > p { margin-top: 0; }
 @media (max-width: 720px) {
-  .nav-inner, .compact .nav-inner { height: auto; flex-direction: column; gap: 8px; padding-block: 12px; }
+  .nav-inner, .compact .nav-inner { width: calc(100% - 24px); height: auto; flex-direction: column; gap: 6px; padding-block: 10px; }
+  .navbar .nav-links { flex-wrap: nowrap; gap: 2px; }
+  .navbar .nav-links a { flex-shrink: 0; padding-inline: 4px; font-size: clamp(.625rem, 2.8vw, .8125rem); }
+  .navbar .nav-links a.active::after { left: 4px; right: 4px; }
   .navbar .brand-artwork, .compact .brand-artwork { width: 48px; }
 }

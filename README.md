@@ -4,7 +4,7 @@ A responsive React + Vite + Tailwind tourism website featuring the ten client-se
 
 Home presents the destination-photo hero shown in the client's reference, with the shared navigation and footer. Explore Destinations opens the ten-place directory, and Discover More opens About. The directory, project information, and QR instructions remain accessible on their own pages.
 
-The navigation order is Home, QR Directory, Destinations, About, and How It Works. All five links stay visible at the top on desktop and mobile, wrapping below the logo on smaller screens without a hamburger menu. QR entry and section anchors account for the header height so content stays visible below the navigation. QR and destination directories retain their separate pages. Each destination's Information section includes a detailed three-paragraph description, with dated reports distinguished from current access or operating arrangements.
+The navigation order is Home, QR Directory, Destinations, About, and How It Works. All five links stay visible at the top on desktop and mobile, fitting in a single row below the logo on smaller screens without a hamburger menu. The sticky header becomes translucent after scrolling. QR entry and section anchors account for the header height so content stays visible below the navigation. QR and destination directories retain their separate pages. Each destination's Information section includes a detailed three-paragraph description, with dated reports distinguished from current access or operating arrangements.
 
 On opening or reloading the React website, a four-second startup screen displays the Sulyap logo with a subtle progress bar. Internal page navigation does not restart it. Direct destination and QR links retain their requested page and information-menu anchor after the startup screen. Animations respect reduced-motion preferences.
 
@@ -27,7 +27,7 @@ Information includes source links and explicit notes where current schedules, fe
 The client-supplied [Travel Oriental Mindoro portal](https://www.travelorientalmindoro.ph/) was reviewed on October 8, 2026. It supplies descriptions, listed admission, destination contacts, four additional map pins, local tourism-office contacts, and the Batangas–Calapan ferry approach. Further-reading links appear on every information page. The portal does not provide complete current hours or individual listings for all ten selected places; those gaps remain explicit. Review decisions and source discrepancies are recorded in `scripts/calapan-source-notes.md`.
 
 ## QR codes for real visitors
-Open `/qr-directory` for all ten unique codes. Each offers Download QR (print-quality SVG) and Print QR (a destination-specific label). QR cards, popups, and the sample code on How It Works show no button or link that opens the destination; scan the code to open its information menu. QR cards, destination QR popups, and printed labels show the QR image and destination details without displaying the raw URL. QR codes are generated in the browser without a third-party QR API. Scanning opens `/destination/:id#information` directly at the destination information menu. Ordinary destination links still open the full destination page. Download or print fresh QR codes after this update; previously saved codes retain their original links.
+Open `/qr-directory` for all ten unique codes. Each offers Download QR (print-quality SVG) and Print QR (a destination-specific label). QR cards, popups, and the sample code on How It Works show no button or link that opens the destination; scan the code to open its information menu. QR cards, destination QR popups, and printed labels show the QR image and destination details without displaying the raw URL. Every displayed, downloaded, and printed QR code includes the client-supplied Sulyap logo in its center, with a small white plate and high error correction. Download or print fresh copies to include the logo; earlier codes still use the same destination links. QR codes are generated in the browser without a third-party QR API. Scanning opens `/destination/:id#information` directly at the destination information menu. Ordinary destination links still open the full destination page. Download or print fresh QR codes after this update; previously saved codes retain their original links.
 
 By default, codes point to the origin where the site is open. A localhost URL is accessible only on that computer. Before printing permanent signs, deploy the site to a public HTTPS address. If the QR codes should use a fixed official address even in local previews, copy `.env.example` to `.env.local`:
 ```
@@ -63,7 +63,8 @@ Current attribution, original source pages, and license details are listed at `/
 
 ## Implementation
 - `src/main.jsx`: page templates, routing, navigation, maps, information panels
-- `src/features.jsx`: lightbox galleries and QR generation/download/print
+- `src/features.jsx`: lightbox galleries and QR display/download/print
+- `src/qr-code.js`: shared QR generation with the existing client logo embedded in the center
 - `src/destinations.js`: editable destination content
 - `src/visitor-details.js`: destination-specific precautions, facilities/accessibility planning, fares and return-trip advice
 - `src/styles.css`: feminine pink theme, responsive layouts, reduced-motion support
