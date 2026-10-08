@@ -2,9 +2,9 @@
 
 A responsive React + Vite + Tailwind tourism website featuring the ten client-selected Calapan destinations, direct QR links, seven information sections per destination, OpenStreetMap embeds, Google Maps directions, and three gallery slots per destination. The visual theme is feminine and professional, with blush/rose accents and no ribbons or lace.
 
-Home presents the destination-photo hero shown in the client's reference, with the shared navigation and footer. Explore Destinations opens the ten-place directory, and Discover More opens About. The directory, project information, and QR instructions remain accessible on their own pages. Destination cards show a static photo, title, and short preview with a View QR Code button. Photos and destination titles have no links, and there is no Explore Destination action. Recommended destinations use the same QR-only card. Scan the displayed code to open the destination information menu.
+Home presents the destination-photo hero shown in the client's reference, with the shared navigation and footer. Explore Destinations opens the ten-place directory, and Discover Establishments opens the Calapan dining and nightlife directory. The destination directory, establishments, and QR instructions remain accessible on their own pages. Destination cards show a static photo, title, and short preview with a View QR Code button. Photos and destination titles have no links, and there is no Explore Destination action. Recommended destinations use the same QR-only card. Scan the displayed code to open the destination information menu.
 
-The navigation order is Home, QR Directory, Destinations, About, and How It Works. All five links stay visible at the top on desktop and mobile, fitting in a compact single row on smaller screens without a hamburger menu. The header has no logo, leaving more room for destination content. The sticky header becomes translucent after scrolling. QR entry and section anchors account for the header height so content stays visible below the navigation. QR and destination directories retain their separate pages. Each destination offers seven clickable titles matching the client requirements: Destination Information and Description, Operating Hours and Fees, Available Activities, Destination Images, Precautionary Measures, Contact Details and Information, and Destination Transportation Details. Description includes background, best time to visit, and nearby places; hours and fees share one page; activities include attractions; precautions include rules, travel tips, and facilities/accessibility planning; transportation includes the map, address, routes, and return arrangements. Dated reports remain distinguished from current access or operating arrangements. Old section links redirect to their corresponding combined page.
+The navigation order is Home, QR Directory, Destinations, Establishments, and How It Works. All five links stay visible at the top on desktop and mobile, fitting in a compact single row on smaller screens without a hamburger menu. The header has no logo, leaving more room for destination content. The sticky header becomes translucent after scrolling. QR entry and section anchors account for the header height so content stays visible below the navigation. QR and destination directories retain their separate pages. Each destination offers seven clickable titles matching the client requirements: Destination Information and Description, Operating Hours and Fees, Available Activities, Destination Images, Precautionary Measures, Contact Details and Information, and Destination Transportation Details. Description includes background, best time to visit, and nearby places; hours and fees share one page; activities include attractions; precautions include rules, travel tips, and facilities/accessibility planning; transportation includes the map, address, routes, and return arrangements. Dated reports remain distinguished from current access or operating arrangements. Old section links redirect to their corresponding combined page.
 
 On opening or reloading the React website, a four-second startup screen displays the Sulyap logo with a subtle progress bar. Internal page navigation does not restart it. Direct destination and QR links retain their requested page and information-menu anchor after the startup screen. Animations respect reduced-motion preferences.
 
@@ -40,7 +40,8 @@ Restart Vite or rebuild after changing this value. Print codes from the final or
 - `/destinations`
 - `/destination/:idOrSlug`
 - `/destination/:idOrSlug/:section`
-- `/about`
+- `/establishments` (optional `?type=bars` or `?type=restaurants` filter)
+- `/about` redirects to `/establishments`
 - `/how-it-works`
 - `/qr-directory`
 
@@ -63,6 +64,8 @@ Current attribution, original source pages, and license details are listed at `/
 
 ## Implementation
 - `src/main.jsx`: page templates, routing, navigation, maps, information panels
+- `src/Establishments.jsx`: establishments directory and category filters
+- `src/establishments.js`: six source-backed Calapan venue listings, addresses, and available phone contacts
 - `src/features.jsx`: lightbox galleries and QR display/download/print
 - `src/qr-code.js`: shared QR generation with the existing client logo embedded in the center
 - `src/destinations.js`: editable destination content
@@ -75,3 +78,5 @@ Current attribution, original source pages, and license details are listed at `/
 Maps require network access to OpenStreetMap; directions open Google Maps. Fonts use Google Fonts with local system fallbacks. Destination content and photo assets do not depend on an external content API.
 
 The seven client information requirements are mapped to the existing sections in `scripts/destination-information-requirements.md`. All ten destinations include specific precautions, transport and return arrangements, local tourism contact assistance, and facilities/accessibility questions. Unknown fees, schedules, and facilities remain clearly qualified rather than presented as confirmed. Tourism office opening hours are labelled separately from destination hours.
+
+The About page has been replaced by Establishments in Calapan. Navigation order is Home, QR Directory, Destinations, Establishments, How It Works. The directory includes Karaoke City, Starbox KTV Bar & Restaurant, Halcon’s Bar & Resto, Arsenia’s Hapag Kainan sa Kabukiran, Quatro Bella Cafe, and Spice Plates, from their linked Travel Oriental Mindoro listings reviewed October 8, 2026. Bars & Clubs includes bars and karaoke venues; listings do not imply a dance club. Map links search the venue name and listed address without inventing coordinates. Contacts appear only where the source publishes them. Opening hours, menus, rates, and reservations should be confirmed with the venue.

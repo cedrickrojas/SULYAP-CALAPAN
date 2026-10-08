@@ -305,10 +305,49 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
 @media (max-width: 720px) {
   .nav-inner, .compact .nav-inner { width: calc(100% - 24px); height: auto; flex-direction: row; gap: 0; padding-block: 6px; }
   .navbar .nav-links { flex-wrap: nowrap; gap: 2px; }
-  .navbar .nav-links a { flex-shrink: 0; padding-inline: 4px; font-size: clamp(.625rem, 2.8vw, .8125rem); }
+  .navbar .nav-links a { flex-shrink: 0; padding-inline: 3px; font-size: clamp(.625rem, 2.65vw, .8125rem); }
   .navbar .nav-links a.active::after { left: 4px; right: 4px; }
 }
 
 .detail-gallery { margin-bottom: 36px; }
+@media (max-width: 340px) {
+  .navbar .nav-links a { padding-inline: 0; letter-spacing: -.02em; }
+}
 .detail-gallery .section-heading { margin-bottom: 24px; }
 .detail-gallery .section-heading h2 { font-size: 1.8rem; }
+
+.establishments-section { padding-bottom: 80px; }
+.establishments-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.establishment-filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.establishment-filters button { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); font-size: .8125rem; }
+.establishment-filters button:hover { border-color: var(--action); color: var(--action); }
+.establishment-filters button[aria-pressed="true"] { background: var(--action); border-color: var(--action); color: #fff; }
+.establishment-filters button span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fceef2; color: var(--action); font-size: .75rem; }
+.establishments-count { color: var(--muted); font-size: .8125rem; white-space: nowrap; }
+.establishment-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.establishment-card { display: flex; flex-direction: column; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: #fffdfc; box-shadow: 0 7px 24px rgb(74 53 64 / 3%); }
+.establishment-heading { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.establishment-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; color: var(--action); background: var(--soft); flex-shrink: 0; }
+.establishment-type { font-size: .75rem; color: var(--action); font-weight: 500; }
+.establishment-card h2 { font-size: 1.65rem; line-height: 1.22; letter-spacing: -.02em; margin-bottom: 14px; }
+.establishment-description { font-size: .875rem; color: var(--muted); margin-bottom: 22px; }
+.establishment-details { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); }
+.establishment-details p, .establishment-details a { display: flex; align-items: flex-start; gap: 10px; color: var(--muted); font-size: .8125rem; line-height: 1.7; }
+.establishment-details svg { margin-top: 3px; color: var(--action); }
+.establishment-details a { margin-top: 12px; color: var(--action); width: fit-content; }
+.establishment-details a:hover, .establishment-source:hover, .establishments-note a:hover { text-decoration: underline; }
+.establishment-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.establishment-actions .button { padding-inline: 14px; font-size: .8125rem; }
+.establishment-source { display: inline-flex; align-items: center; gap: 5px; font-size: .6875rem; color: var(--muted); padding-block: 12px; }
+.establishments-note { margin-top: 30px; padding: 22px 26px; border-radius: 16px; background: var(--soft); color: var(--muted); font-size: .8125rem; }
+.establishments-note p + p { margin-top: 6px; }
+.establishments-note a { color: var(--action); display: inline-flex; align-items: center; gap: 5px; }
+@media (max-width: 1050px) { .establishment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .establishments-toolbar { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .establishment-filters { gap: 8px; }
+  .establishment-filters button { padding: 9px 12px; font-size: .75rem; gap: 7px; }
+  .establishment-grid { grid-template-columns: 1fr; gap: 18px; }
+  .establishment-card { padding: 24px; }
+  .establishments-note { padding: 20px; }
+}
