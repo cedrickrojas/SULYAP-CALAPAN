@@ -1,0 +1,172 @@
+{
+  "sto-nino-cathedral": [
+    {
+      "src": "/images/sto-nino-cathedral-1.jpg",
+      "alt": "Sto. Niño Cathedral — Sto Nino Church Calapan",
+      "placeholder": false
+    },
+    {
+      "src": "/images/sto-nino-cathedral-2.jpg",
+      "alt": "Sto. Niño Cathedral — Santo Niño Cathedral in Calapan, Oriental Mindoro",
+      "placeholder": false
+    },
+    {
+      "src": "/images/sto-nino-cathedral-3.jpg",
+      "alt": "Sto. Niño Cathedral — Calapan Church historical marker",
+      "placeholder": false
+    }
+  ],
+  "silonay-mangrove-conservation-eco-park": [
+    {
+      "src": "/images/silonay-mangrove-conservation-eco-park-1.jpg",
+      "alt": "Silonay Mangrove Conservation Eco-Park — Silonay mangrove conservation park",
+      "placeholder": false
+    },
+    {
+      "src": "/images/silonay-mangrove-conservation-eco-park-2.jpg",
+      "alt": "Silonay Mangrove Conservation Eco-Park — Silonay mangrove park visitor building",
+      "placeholder": false
+    },
+    {
+      "src": "/images/silonay-mangrove-conservation-eco-park-3.jpg",
+      "alt": "Silonay Mangrove Conservation Eco-Park — Silonay mangrove forest, aerial view",
+      "placeholder": false
+    }
+  ],
+  "oriental-mindoro-heritage-museum": [
+    {
+      "src": "/images/oriental-mindoro-heritage-museum-1.jpg",
+      "alt": "Oriental Mindoro Heritage Museum — Oriental Mindoro Heritage Museum, Ibaba East",
+      "placeholder": false
+    },
+    {
+      "src": "/images/oriental-mindoro-heritage-museum-2.jpg",
+      "alt": "Oriental Mindoro Heritage Museum — Oriental Mindoro Heritage Museum illuminated facade",
+      "placeholder": false
+    },
+    {
+      "src": "/images/oriental-mindoro-heritage-museum-3.jpg",
+      "alt": "Oriental Mindoro Heritage Museum — Oriental Mindoro Heritage Museum at dusk",
+      "placeholder": false
+    }
+  ],
+  "calapan-zoological-and-recreational-park": [
+    {
+      "src": "/images/calapan-zoological-and-recreational-park-1.jpg",
+      "alt": "Calapan Zoological and Recreational Park — Calapan Nature Park shaded grounds and animal sculptures",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-zoological-and-recreational-park-2.jpg",
+      "alt": "Calapan Zoological and Recreational Park — Calapan Nature Park entrance sign, Bulusan",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-zoological-and-recreational-park-3.jpg",
+      "alt": "Calapan Zoological and Recreational Park — Calapan Nature Park sculptures and recreational grounds",
+      "placeholder": false
+    }
+  ],
+  "plaza-del-gobernador": [
+    {
+      "src": "/images/plaza-del-gobernador-1.jpg",
+      "alt": "Plaza del Gobernador — Plaza del Gobernador",
+      "placeholder": false
+    },
+    {
+      "src": "/images/plaza-del-gobernador-2.jpg",
+      "alt": "Plaza del Gobernador — Plaza del Gobernador pavilion at dusk",
+      "placeholder": false
+    },
+    {
+      "src": "/images/plaza-del-gobernador-3.jpg",
+      "alt": "Plaza del Gobernador — Plaza del Gobernador gallery photograph",
+      "placeholder": false
+    }
+  ],
+  "calapan-city-plaza": [
+    {
+      "src": "/images/calapan-city-plaza-1.jpg",
+      "alt": "Calapan City Plaza — Calapan Plaza",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-city-plaza-2.jpg",
+      "alt": "Calapan City Plaza — Calapan City Plaza, Calapan City, Oriental Mindoro, Philippines",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-city-plaza-3.jpg",
+      "alt": "Calapan City Plaza — Mindoro Relief Map at Calapan Plaza",
+      "placeholder": false
+    }
+  ],
+  "aganhao-islet": [
+    {
+      "src": "/images/aganhao-islet-1.jpg",
+      "alt": "Aganhao Islet — Aganhao / Anaganahao Islet, coastal view",
+      "placeholder": false
+    },
+    {
+      "src": "/images/aganhao-islet-2-detail.svg",
+      "alt": "Aganhao Islet — Shoreline detail (crop of the same aerial photograph)",
+      "placeholder": false
+    },
+    {
+      "src": "/images/aganhao-islet-3-detail.svg",
+      "alt": "Aganhao Islet — Island greenery detail (crop of the same aerial photograph)",
+      "placeholder": false
+    }
+  ],
+  "caluangan-lake": [
+    {
+      "src": "/images/caluangan-lake-1.jpg",
+      "alt": "Caluangan Lake — Caluangan Lake landscape",
+      "placeholder": false
+    },
+    {
+      "src": "/images/caluangan-lake-2.jpg",
+      "alt": "Caluangan Lake — Caluangan Lake waterway and fishing landscape",
+      "placeholder": false
+    },
+    {
+      "src": "/images/caluangan-lake-3.jpg",
+      "alt": "Caluangan Lake — Caluangan Lake floating cottage inauguration (2022)",
+      "placeholder": false
+    }
+  ],
+  "baco-island": [
+    {
+      "src": "/images/baco-island-1.jpg",
+      "alt": "Baco Island — Baco Islands",
+      "placeholder": false
+    },
+    {
+      "src": "/images/baco-island-2.jpg",
+      "alt": "Baco Island — Baco island group - Pulong Malaki (Baco Grande), aerial view",
+      "placeholder": false
+    },
+    {
+      "src": "/images/baco-island-3.jpg",
+      "alt": "Baco Island — Baco island group - Pulong Gitna (Baco Medio), aerial view",
+      "placeholder": false
+    }
+  ],
+  "suqui-beach": [
+    {
+      "src": "/images/suqui-beach-1.jpg",
+      "alt": "Suqui Beach — Donnyland Resort from afar",
+      "placeholder": false
+    },
+    {
+      "src": "/images/suqui-beach-2.jpg",
+      "alt": "Suqui Beach — Suqui Beach sea view from a shaded beachfront — Mia Valiente",
+      "placeholder": false
+    },
+    {
+      "src": "/images/suqui-beach-3.jpg",
+      "alt": "Suqui Beach — Donnyland resort frontage in Barangay Suqui",
+      "placeholder": false
+    }
+  ]
+}
