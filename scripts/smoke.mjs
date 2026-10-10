@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {chromium} from '@playwright/test';
-import {mkdirSync} from 'node:fs';
+import {mkdirSync,readFileSync} from 'node:fs';
 import {destinations} from '../src/destinations.js';
 mkdirSync('.sites-runtime/qa',{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chromium'});
@@ -77,9 +77,10 @@ for(const d of destinations){
  await scannedPage.locator('.back-link').click();await scannedPage.waitForFunction(()=>document.getElementById('information')?.getBoundingClientRect().top<document.querySelector('.navbar').getBoundingClientRect().bottom+48);
 }
 await scannedPage.close();console.log('PASS: all ten scanned QR links immediately show the information menu on mobile; section and back navigation work.');
-const downloadEvent=page.waitForEvent('download');await page.locator('.qr-card').first().getByRole('button',{name:'Download QR'}).click();const download=await downloadEvent;assert.ok(download.suggestedFilename().endsWith('.svg'));await download.saveAs('.sites-runtime/qa/downloaded-qr.svg');
+const downloadEvent=page.waitForEvent('download');await page.locator('.qr-card').first().getByRole('button',{name:'Download QR'}).click();const download=await downloadEvent;assert.ok(download.suggestedFilename().endsWith('.png'));await download.saveAs('.sites-runtime/qa/downloaded-qr.png');
+const png=readFileSync('.sites-runtime/qa/downloaded-qr.png');assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10],'Download must contain real PNG bytes');assert.equal(png.readUInt32BE(16),1000);assert.equal(png.readUInt32BE(20),1000);
 await page.evaluate(()=>{const observer=new MutationObserver(()=>{document.querySelectorAll('iframe[title=\"Printable destination QR code\"]').forEach(frame=>{frame.contentWindow.print=()=>window.__qrPrinted=true;});});observer.observe(document.body,{childList:true,subtree:true});});
-await page.locator('.qr-card').first().getByRole('button',{name:'Print QR'}).click();await page.waitForFunction(()=>window.__qrPrinted===true);assert.equal(await page.frameLocator('iframe[title="Printable destination QR code"]').locator('h1').innerText(),destinations[0].name);console.log('PASS: QR directory, SVG download, print label, and gallery controls.');
+await page.locator('.qr-card').first().getByRole('button',{name:'Print QR'}).click();await page.waitForFunction(()=>window.__qrPrinted===true);assert.equal(await page.frameLocator('iframe[title="Printable destination QR code"]').locator('h1').innerText(),destinations[0].name);console.log('PASS: QR directory, 1000px PNG download, print label, and gallery controls.');
 for(const path of ['/','/destinations','/destination/1','/destination/5/location','/destination/3/contactInformation','/destination/2/contactInformation','/qr-directory','/about','/how-it-works']){
  await page.setViewportSize({width:390,height:844});await openPage(page,origin+path);await noOverflow();
 }

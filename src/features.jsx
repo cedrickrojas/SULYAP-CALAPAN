@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {Camera,X,ChevronLeft,ChevronRight,QrCode,MapPin,Download,Printer} from 'lucide-react';
-import {brandedQrSvg,brandedQrDataUrl} from './qr-code';
+import {brandedQrPngBlob,brandedQrDataUrl} from './qr-code';
 import {destinationUrl} from './destinations';
 const num=id=>String(id).padStart(2,'0');
 export function PhotoGallery({destination:d,embedded=false}){
@@ -15,7 +15,17 @@ export function QRCodeImage({destination:d}){
  if(error)return <p role="alert">The QR code could not be generated. Refresh the page to try again.</p>;
  return src?<img className="qr-image" src={src} alt={`QR code linking directly to ${d.name}`}/>:<div className="qr-loading" role="status">Preparing QR code…</div>;
 }
-async function downloadQR(d,setError){try{const svg=await brandedQrSvg(destinationUrl(d),{width:1000,margin:4});const blob=new Blob([svg],{type:'image/svg+xml'});const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`sulyap-${num(d.id)}-${d.slug}-qr.svg`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch{setError('The QR download could not be prepared. Please try again.');}}
+async function downloadQR(d,setError){
+ setError('');
+ try{
+  const blob=await brandedQrPngBlob(destinationUrl(d));
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;
+  link.download=`sulyap-${num(d.id)}-${d.slug}-qr.png`;
+  document.body.appendChild(link);
+  try{link.click();}finally{link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+ }catch{setError('The QR download could not be prepared. Please try again.');}
+}
 async function printQR(d,setError){
  let frame;try{const image=await brandedQrDataUrl(destinationUrl(d),{width:900,margin:4});frame=document.createElement('iframe');frame.style.cssText='position:fixed;width:1px;height:1px;bottom:0;left:0;border:0;';frame.title='Printable destination QR code';document.body.appendChild(frame);const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html><head><title>Sulyap Destination QR code</title><style>body{font-family:Arial,sans-serif;text-align:center;padding:50px;color:#4a3540}img{width:300px;max-width:100%}h1{font-size:28px}small{font-size:18px}</style></head><body></body></html>');doc.close();const heading=doc.createElement('h1');heading.textContent=d.name;const caption=doc.createElement('small');caption.textContent='SCAN TO LEARN MORE · DESTINATION '+num(d.id);const img=doc.createElement('img');img.src=image;img.alt='Destination QR code';doc.body.append(heading,caption,img);await img.decode();frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});frame.contentWindow.focus();frame.contentWindow.print();}catch{frame?.remove();setError('Printing could not open. Download the QR code and print the saved file instead.');}
 }

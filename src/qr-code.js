@@ -35,3 +35,26 @@ export async function brandedQrSvg(url, { width = 360, margin = 4 } = {}) {
 export async function brandedQrDataUrl(url, options) {
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(await brandedQrSvg(url, options));
 }
+
+// Phone galleries and photo pickers need a raster image rather than an SVG.
+export async function brandedQrPngBlob(url, { width = 1000, margin = 4 } = {}) {
+  const image = new Image();
+  image.src = await brandedQrDataUrl(url, { width, margin });
+  await image.decode();
+
+  const canvas = document.createElement('canvas');
+  canvas.width = image.naturalWidth;
+  canvas.height = image.naturalHeight;
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Could not prepare the QR image');
+  context.fillStyle = '#ffffff';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (blob) resolve(blob);
+      else reject(new Error('Could not export the QR image'));
+    }, 'image/png');
+  });
+}
