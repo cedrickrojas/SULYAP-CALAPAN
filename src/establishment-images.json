@@ -83,5 +83,118 @@
     "width": 590,
     "height": 387,
     "position": "50% 50%"
+  },
+  "merls": {
+    "src": "/images/establishments/merls.webp",
+    "alt": "Storefront shown in the Merl’s Native Delicacies gallery",
+    "width": 800,
+    "height": 450,
+    "position": "50% 60%"
+  },
+  "small-creation": {
+    "src": "/images/establishments/small-creation.webp",
+    "alt": "Small Creation Souvenirs green storefront and sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 45%"
+  },
+  "mangyan-heritage": {
+    "src": "/images/establishments/mangyan-heritage.webp",
+    "alt": "Woven baskets and bamboo with indigenous script displayed at the Mangyan Heritage Center",
+    "width": 800,
+    "height": 450,
+    "position": "42% 50%"
+  },
+  "filipiniana": {
+    "src": "/images/establishments/filipiniana.webp",
+    "alt": "Filipiniana Resort and Hotel entrance and roadside sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "mahalta": {
+    "src": "/images/establishments/mahalta.webp",
+    "alt": "Mahalta Resort entrance sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "blue-harbor": {
+    "src": "/images/establishments/blue-harbor.webp",
+    "alt": "Blue Harbor Hotel reception area",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "dreaming-forest": {
+    "src": "/images/establishments/dreaming-forest.webp",
+    "alt": "Dreaming Forest Hotel illuminated exterior sign",
+    "width": 800,
+    "height": 600,
+    "position": "50% 42%"
+  },
+  "nikitas": {
+    "src": "/images/establishments/nikitas.webp",
+    "alt": "Nikita's Place Hotel frontage and sign",
+    "width": 480,
+    "height": 270,
+    "position": "50% 50%"
+  },
+  "marcco": {
+    "src": "/images/establishments/marcco.webp",
+    "alt": "MARCCO cooperative visit in a DA-PRDP report about its calamansi enterprise",
+    "width": 728,
+    "height": 350,
+    "position": "50% 50%",
+    "fit": "contain",
+    "caption": "MARCCO cooperative · DA-PRDP report"
+  },
+  "runaway-travel": {
+    "src": "/images/establishments/runaway-travel.webp",
+    "alt": "Runaway Travel and Tours office with its M. Roxas Drive, Sto. Niño, Calapan signage",
+    "width": 960,
+    "height": 720,
+    "position": "50% 38%"
+  },
+  "gl-pellas": {
+    "src": "/images/establishments/gl-pellas.webp",
+    "alt": "GL Pellas owner and staff with RCMB MIMAROPA participants at an online seminar in August 2021",
+    "width": 443,
+    "height": 234,
+    "position": "50% 50%",
+    "fit": "contain",
+    "caption": "GL Pellas team · August 2021"
+  },
+  "book-n-learn": {
+    "src": "/images/establishments/book-n-learn.webp",
+    "alt": "Illustrative travel planning with a map, passport, laptop and cameras",
+    "width": 800,
+    "height": 1000,
+    "position": "50% 40%",
+    "illustrative": true
+  },
+  "asm-travel": {
+    "src": "/images/establishments/asm-travel.webp",
+    "alt": "Illustrative airplane wing above clouds at sunset",
+    "width": 750,
+    "height": 1000,
+    "position": "50% 42%",
+    "illustrative": true
+  },
+  "8n8": {
+    "src": "/images/establishments/8n8.webp",
+    "alt": "Illustrative souvenir display at a market shop in Vietnam",
+    "width": 667,
+    "height": 1000,
+    "position": "50% 56%",
+    "illustrative": true
+  },
+  "solem-travel": {
+    "src": "/images/establishments/solem-travel.webp",
+    "alt": "Illustrative blue suitcase and passport in an airport terminal",
+    "width": 666,
+    "height": 1000,
+    "position": "50% 68%",
+    "illustrative": true
   }
 }

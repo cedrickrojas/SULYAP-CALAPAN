@@ -212,7 +212,8 @@ def main():
 
 def write_credits(credits):
     page = ROOT / 'public/photo-credits.html'
-    head = page.read_text(encoding='utf-8').split('<body>', 1)[0]
+    previous = page.read_text(encoding='utf-8')
+    head = previous.split('<body>', 1)[0]
     items = []
     escape = lambda value: html.escape(value, quote=True)
     for photo in credits:
@@ -245,10 +246,16 @@ def write_credits(credits):
                 escape(photo['name']) + '</strong> &mdash; ' + escape(photo['author']) +
                 ' &middot; <a href="' + escape(photo['source']) + '">Original published source</a>' +
                 ' &middot; <a href="' + escape(photo['url']) + '">Source image</a>' +
+                (' &middot; <a href="' + escape(photo['licenseUrl']) + '">' + escape(photo['license']) + '</a>' if photo.get('licenseUrl') else '') +
                 ' &middot; <a href="/images/' + escape(photo['file']) + '">Local photo</a>. ' +
                 escape(photo['note']) + '</li>')
         section = '<section id="establishments"><h2>Establishment photographs</h2><p>Photographs are stored locally and linked to their original published sources.</p><ol>' + ''.join(establishment_items) + '</ol></section>'
         body = body.replace('</body>', section + '</body>')
+    # Home culture photographs have their own curated attribution section.
+    marker = '<section id="mindoro-culture">'
+    if marker in previous:
+        culture = marker + previous.split(marker, 1)[1].split('</section>', 1)[0] + '</section>'
+        body = body.replace('</body>', culture + '</body>')
     page.write_text(head + body, encoding='utf-8')
 
 

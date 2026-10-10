@@ -1,4 +1,4 @@
-// Published Travel Oriental Mindoro listings reviewed October 8, 2026.
+// Existing listings reviewed October 8, 2026; new categories reviewed October 10, 2026.
 // Coastline and BLCK OUT locations were supplied by the client.
 // Keep published details tied to their source; do not infer hours, rates, or contacts.
 export const establishments = [
@@ -73,5 +73,95 @@ export const establishments = [
     description: 'A restaurant listed in Barangay Guinobatan, with a published contact for visit inquiries.',
     address: 'Brgy. Guinobatan, Calapan City', phone: '0906 539 0839', telephone: '+639065390839',
     source: 'https://www.travelorientalmindoro.ph/place/spice-plates-1c057956',
+  },
+  {
+    id: 'merls', name: "Merl's Native Delicacies", category: 'souvenirs', type: 'Pasalubong & delicacies',
+    description: 'Bring home native delicacies from this Lumangbayan pasalubong stop.',
+    address: 'Lumangbayan, Calapan City, Oriental Mindoro', phone: '0917 707 4803', telephone: '+639177074803',
+    source: 'https://www.travelorientalmindoro.ph/place/merls-native-delicacies',
+  },
+  {
+    id: 'small-creation', name: 'Small Creation Variety', category: 'souvenirs', type: 'Souvenir shop',
+    description: 'A souvenir and pasalubong shop in San Vicente East, listed in the provincial tourism directory.',
+    address: 'San Vicente East, Calapan City, Oriental Mindoro',
+    source: 'https://www.travelorientalmindoro.ph/place/small-creation-variety',
+  },
+  {
+    id: 'mangyan-heritage', name: 'Mangyan Heritage Center', category: 'souvenirs', type: 'Handicrafts & souvenirs',
+    description: 'Discover woven handicrafts and local keepsakes at the Mangyan Heritage Center in Ibaba East.',
+    address: 'Ibaba East, Calapan City, Oriental Mindoro', phone: '0917 429 3817', telephone: '+639174293817',
+    source: 'https://www.travelorientalmindoro.ph/place/mangyan-heritage-center',
+  },
+  {
+    id: 'marcco', name: 'MARCCO Mindoren-C Pasalubong Outlet', category: 'souvenirs', type: 'Pasalubong outlet',
+    description: 'A cooperative pasalubong outlet for calamansi, dalandan, and other local products, reported by PIA in 2023.',
+    address: 'Mahal na Pangalan, Calapan City, Oriental Mindoro',
+    source: 'https://mirror.pia.gov.ph/news/2023/04/19/marcco-mindoren-c-pasalubong-outlet-binuksan-na-sa-calapan', sourceLabel: 'PIA report',
+  },
+  {
+    id: '8n8', name: '8N8 Travel and Souvenirs', category: 'souvenirs', type: 'Travel & souvenirs',
+    description: 'A travel and souvenirs business listed in San Vicente South. Contact the shop for available souvenir items.',
+    address: '280 San Vicente South, Calapan City, Oriental Mindoro', phone: '0917 815 9829', telephone: '+639178159829',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
+  },
+  {
+    id: 'filipiniana', name: 'Filipiniana Resort & Hotel', category: 'hotels', type: 'Hotel & resort',
+    description: 'A hotel and resort in Sto. Niño, featured in the provincial accommodation directory.',
+    address: 'Sto. Niño, Calapan City, Oriental Mindoro',
+    source: 'https://www.travelorientalmindoro.ph/place/filipiniana-resort-hotel',
+  },
+  {
+    id: 'mahalta', name: 'Mahalta Resort & Convention Center', category: 'hotels', type: 'Hotel & convention center',
+    description: 'An accommodation and convention venue in Barangay Parang for a Calapan stay.',
+    address: 'Parang, Calapan City, Oriental Mindoro', phone: '0961 826 8892', telephone: '+639618268892',
+    source: 'https://www.travelorientalmindoro.ph/place/mahalta-resort-convention-center',
+  },
+  {
+    id: 'blue-harbor', name: 'Blue Harbor Hotel', category: 'hotels', type: 'Hotel',
+    description: 'A hotel in San Antonio with a published contact for room and reservation inquiries.',
+    address: 'San Antonio, Calapan City, Oriental Mindoro', phone: '0966 883 0048', telephone: '+639668830048',
+    source: 'https://www.travelorientalmindoro.ph/place/blue-harbor-hotel',
+  },
+  {
+    id: 'dreaming-forest', name: 'Dreaming Forest Hotel', category: 'hotels', type: 'Hotel',
+    description: 'A Tawiran hotel listed in the Calapan accommodation directory. Inquire directly about rooms and rates.',
+    address: 'Tawiran, Calapan City, Oriental Mindoro', phone: '0956 801 9006', telephone: '+639568019006',
+    source: 'https://www.travelorientalmindoro.ph/place/dreaming-forest-hotel',
+  },
+  {
+    id: 'nikitas', name: "Nikita's Place Hotel", category: 'hotels', type: 'Hotel',
+    description: 'A hotel in Tawiran offering a base for your Calapan visit.',
+    address: 'Tawiran, Calapan City, Oriental Mindoro',
+    source: 'https://www.travelorientalmindoro.ph/place/nikitas-place-hotel',
+  },
+  {
+    id: 'asm-travel', name: 'ASM Travel Agency', category: 'travel-agencies', type: 'Travel agency',
+    description: 'Find this Calapan travel agency at Basa Building on Infantado Street.',
+    address: 'Basa Building, Infantado Street, San Vicente West, Calapan City, Oriental Mindoro', phone: '0929 255 1338', telephone: '+639292551338',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
+  },
+  {
+    id: 'book-n-learn', name: 'Book N Learn Travel and Tours', category: 'travel-agencies', type: 'Travel agency',
+    description: 'A travel and tours agency in Ilaya. Contact its published number for travel inquiries.',
+    address: 'Rivera Building, Bonifacio Street, Ilaya, Calapan City, Oriental Mindoro', phone: '0917 569 5509', telephone: '+639175695509',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
+  },
+  {
+    id: 'gl-pellas', name: 'GL Pellas Travel and Business', category: 'travel-agencies', type: 'Travel agency',
+    description: 'A travel business listed at Vencios Garden Hotel and Restaurant in Masipit.',
+    address: 'Vencios Garden Hotel and Restaurant, Masipit, Calapan City, Oriental Mindoro', phone: '0936 646 5274', telephone: '+639366465274',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
+  },
+  {
+    id: 'runaway-travel', name: 'Runaway Travel and Tours', category: 'travel-agencies', type: 'Travel agency',
+    description: 'A travel and tours agency along M. Roxas Drive in Sto. Niño, Calapan City.',
+    address: 'M. Roxas Drive, Sto. Niño, Calapan City, Oriental Mindoro', phone: '0917 798 1921', telephone: '+639177981921',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
+  },
+  {
+    id: 'solem-travel', name: 'Solem Travel and Tours', category: 'travel-agencies', type: 'Travel agency',
+    description: 'A travel agency listed at Neo Calapan Mall in Lumangbayan.',
+    address: 'LS-046 Neo Calapan Mall, Roxas Drive, Lumangbayan, Calapan City, Oriental Mindoro', phone: '0939 554 9714', telephone: '+639395549714',
+    source: 'https://www.travelorientalmindoro.ph/directory/travel-agencies',
   },
 ];

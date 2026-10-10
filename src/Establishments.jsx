@@ -1,10 +1,14 @@
 import {useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
-import {MapPin, Phone, Utensils, Wine, ShoppingBag, ExternalLink} from 'lucide-react';
+import {MapPin, Phone, Utensils, Wine, ShoppingBag, Gift, Hotel, Plane, ExternalLink} from 'lucide-react';
 import {establishments} from './establishments.js';
 import establishmentImages from './establishment-images.json';
 
-const categories = [['all', 'All Establishments'], ['bars', 'Bars & Clubs'], ['restaurants', 'Restaurants'], ['malls', 'Malls']];
+const categories = [
+  ['all', 'All Establishments'], ['bars', 'Bars & Clubs'], ['restaurants', 'Restaurants'],
+  ['malls', 'Malls'], ['souvenirs', 'Souvenir Shops'], ['hotels', 'Hotels'], ['travel-agencies', 'Travel Agencies'],
+];
+const categoryIcons = {bars: Wine, restaurants: Utensils, malls: ShoppingBag, souvenirs: Gift, hotels: Hotel, 'travel-agencies': Plane};
 
 function EstablishmentPhoto({place, Icon}) {
   const photo = establishmentImages[place.id];
@@ -14,7 +18,8 @@ function EstablishmentPhoto({place, Icon}) {
       <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" style={{objectPosition: photo.position}} onError={() => setUnavailable(true)}/>
       <a className="establishment-photo-credit" href={`/photo-credits.html#establishment-${place.id}`} aria-label={`Photo credit for ${place.name}`}>Photo credit <ExternalLink size={12}/></a>
     </> : <div className="establishment-photo-pending"><Icon size={36} aria-hidden="true"/><span>{unavailable ? 'Photo unavailable' : 'Photo coming soon'}</span></div>}
-    <span className="establishment-photo-type">{place.type}</span>
+    <span className="establishment-photo-type">{place.type}{photo?.illustrative && !unavailable ? ' · Illustrative photo' : ''}</span>
+    {photo?.caption && !unavailable && <span className="establishment-photo-caption">{photo.caption}</span>}
   </div>;
 }
 
@@ -25,9 +30,9 @@ export default function Establishments() {
 
   return <>
     <section className="page-intro container">
-      <p className="eyebrow"><span/>EAT, SHOP & UNWIND</p>
+      <p className="eyebrow"><span/>EAT, SHOP, STAY & EXPLORE</p>
       <h1>Establishments <em>in Calapan.</em></h1>
-      <p>Find restaurants, bars, nightlife venues, and malls to complete your Calapan visit. Choose a category and discover a place to dine, shop, or unwind.</p>
+      <p>Find restaurants, bars, malls, souvenir shops, hotels, and travel agencies for your Calapan visit. Choose a category to plan where to eat, shop, stay, or arrange your trip.</p>
     </section>
     <section className="container establishments-section" aria-label="Calapan establishments directory">
       <div className="establishments-toolbar">
@@ -38,7 +43,7 @@ export default function Establishments() {
       </div>
       <div className="establishment-grid">
         {visible.map(place => {
-          const Icon = place.category === 'bars' ? Wine : place.category === 'malls' ? ShoppingBag : Utensils;
+          const Icon = categoryIcons[place.category] || ShoppingBag;
           const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.address}`)}`;
           return <article className="establishment-card" key={place.id}>
             <EstablishmentPhoto place={place} Icon={Icon}/>
@@ -54,7 +59,7 @@ export default function Establishments() {
           </article>;
         })}
       </div>
-      <div className="establishments-note"><p>Planning a visit? Check current opening hours, store availability, menus, rates, and reservations with the establishment.</p><p>Tourism reference: <a href="https://www.travelorientalmindoro.ph/municipality/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
+      <div className="establishments-note"><p>Planning a visit? Check current opening hours, store availability, menus, room rates, reservations, and travel services with the establishment.</p><p>Tourism reference: <a href="https://www.travelorientalmindoro.ph/municipality/calapan-city" target="_blank" rel="noreferrer">Travel Oriental Mindoro <ExternalLink size={12}/></a>.</p></div>
     </section>
   </>;
 }
