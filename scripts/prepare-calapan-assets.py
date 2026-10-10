@@ -20,7 +20,7 @@ NAMES = [
     ('calapan-zoological-and-recreational-park', 'Calapan Zoological and Recreational Park'),
     ('plaza-del-gobernador', 'Plaza del Gobernador'),
     ('calapan-city-plaza', 'Calapan City Plaza'),
-    ('aganhao-islet', 'Aganagahaw Islet'),
+    ('aganhao-islet', 'Anaganahao Island'),
     ('caluangan-lake', 'Caluangan Lake'),
     ('baco-island', 'Baco Islands'),
     ('suqui-beach', 'Suqui Beach'),
@@ -160,7 +160,7 @@ def prepare_detail_views(ready):
         svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" '
                f'viewBox="{x:g} {y:g} {crop_width:g} {crop_height:g}">'
                f'<title>{html.escape(title)}</title>'
-               '<desc>Detail view of the same verified Aganagahaw aerial photograph; not a separate photograph.</desc>'
+               '<desc>Detail view of the same verified Anaganahao aerial photograph; not a separate photograph.</desc>'
                f'<image width="{width}" height="{height}" href="data:image/jpeg;base64,{encoded}"/>'
                '</svg>')
         (ROOT / 'public/images' / filename).write_text(svg, encoding='utf-8')
@@ -236,7 +236,7 @@ def write_credits(credits):
                      '</a> · <a href="' + escape(photo['source']) + '">Original on Wikimedia Commons</a>' +
                      ' · <a href="/images/' + escape(photo['file']) + '">Processed photo</a>.' +
                      ' Resized and compressed for the web; display crops vary. The processed image retains the stated license.</li>')
-    body = '<body><a href="/">Back to Sulyap</a><h1>Photo credits</h1><p>Calapan destination photographs come from Wikimedia Commons, the client-supplied Travel Oriental Mindoro portal, Calapan community mapping, UPLB, Mindoro Travel Guide, and Philippine Information Agency MIMAROPA. Individual source and license details are listed below. They may show earlier appearances of the sites; the Baco gallery shows the island group, and the Suqui gallery includes the Donnyland beachfront and private resort frontage.</p><p>The Aganagahaw gallery uses one verified aerial photograph and two clearly labelled detail crops of that same image. The shoreline and greenery details are not separate photographs. All thirty gallery slots now display destination imagery.</p><ol>' + ''.join(items) + '</ol></body></html>'
+    body = '<body><a href="/">Back to Sulyap</a><h1>Photo credits</h1><p>Calapan destination photographs come from Wikimedia Commons, the client-supplied Travel Oriental Mindoro portal, Calapan community mapping, UPLB, Mindoro Travel Guide, and Philippine Information Agency MIMAROPA. Individual source and license details are listed below. They may show earlier appearances of the sites; the Baco gallery shows the island group, and the Suqui gallery includes the Donnyland beachfront and private resort frontage.</p><p>The Anaganahao gallery uses one verified aerial photograph and two clearly labelled detail crops of that same image. The shoreline and greenery details are not separate photographs. All thirty gallery slots now display destination imagery.</p><ol>' + ''.join(items) + '</ol></body></html>'
     establishment_sources = ROOT / 'scripts/establishment-photo-assets.json'
     if establishment_sources.exists():
         establishment_items = []
