@@ -104,17 +104,17 @@
   "aganhao-islet": [
     {
       "src": "/images/aganhao-islet-1.jpg",
-      "alt": "Aganhao Islet — Aganhao / Anaganahao Islet, coastal view",
+      "alt": "Aganagahaw Islet — Aganagahaw Islet, coastal view",
       "placeholder": false
     },
     {
       "src": "/images/aganhao-islet-2-detail.svg",
-      "alt": "Aganhao Islet — Shoreline detail (crop of the same aerial photograph)",
+      "alt": "Aganagahaw Islet — Shoreline detail (crop of the same aerial photograph)",
       "placeholder": false
     },
     {
       "src": "/images/aganhao-islet-3-detail.svg",
-      "alt": "Aganhao Islet — Island greenery detail (crop of the same aerial photograph)",
+      "alt": "Aganagahaw Islet — Island greenery detail (crop of the same aerial photograph)",
       "placeholder": false
     }
   ],
@@ -138,17 +138,17 @@
   "baco-island": [
     {
       "src": "/images/baco-island-1.jpg",
-      "alt": "Baco Island — Baco Islands",
+      "alt": "Baco Islands — Baco Islands",
       "placeholder": false
     },
     {
       "src": "/images/baco-island-2.jpg",
-      "alt": "Baco Island — Baco island group - Pulong Malaki (Baco Grande), aerial view",
+      "alt": "Baco Islands — Baco island group - Pulong Malaki (Baco Grande), aerial view",
       "placeholder": false
     },
     {
       "src": "/images/baco-island-3.jpg",
-      "alt": "Baco Island — Baco island group - Pulong Gitna (Baco Medio), aerial view",
+      "alt": "Baco Islands — Baco island group - Pulong Gitna (Baco Medio), aerial view",
       "placeholder": false
     }
   ],

@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {getDestination} from './destinations';
 
 const selections = [
-  {id: '9', image: 1, label: 'Baco Island'},
+  {id: '9', image: 1, label: 'Baco Islands'},
   {id: '1', image: 0, position: '55% 40%'},
   {id: '2', image: 0, label: 'Silonay Mangroves'},
   {id: '3', image: 1, label: 'Heritage Museum', position: '65% 50%'},

@@ -422,7 +422,7 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
 .hero-collage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); aspect-ratio: 1.1; gap: 10px; }
 .hero-collage-tile { position: relative; display: block; width: 100%; min-width: 0; min-height: 0; overflow: hidden; border-radius: 16px; background: var(--soft); box-shadow: 0 5px 18px rgb(74 53 64 / 8%); }
 .hero-collage-featured { grid-column: span 2; grid-row: span 2; border-radius: 24px 16px 16px 16px; }
-.hero-collage-frame { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 1.1s ease; }
+.hero-collage-frame { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 1.8s ease-in-out; }
 .hero-collage-frame.is-active { opacity: 1; z-index: 1; }
 .hero-collage-tile img { width: 100%; height: 100%; object-fit: cover; animation: sulyap-landscape 8s ease-in-out infinite alternate both; animation-play-state: paused; }
 .hero-collage-frame.is-active img { animation-play-state: running; }

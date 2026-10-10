@@ -13,6 +13,6 @@ for(const d of destinations){
  assert.equal(d.images.length,3);
  for(const image of d.images){assert.ok(existsSync('public'+image.src),'Missing '+image.src);if(image.placeholder){assert.ok(image.src.endsWith('.svg'));assert.ok(readFileSync('public'+image.src,'utf8').includes('PHOTO COMING SOON'));}else{assert.ok(statSync('public'+image.src).size>10000);}}
 }
-assert.deepEqual(destinations.map(d=>d.name),['Sto. Niño Cathedral','Silonay Mangrove Conservation Eco-Park','Oriental Mindoro Heritage Museum','Calapan Zoological and Recreational Park','Plaza del Gobernador','Calapan City Plaza','Aganhao Islet','Caluangan Lake','Baco Island','Suqui Beach']);
+assert.deepEqual(destinations.map(d=>d.name),['Sto. Niño Cathedral','Silonay Mangrove Conservation Eco-Park','Oriental Mindoro Heritage Museum','Calapan Zoological and Recreational Park','Plaza del Gobernador','Calapan City Plaza','Aganagahaw Islet','Caluangan Lake','Baco Islands','Suqui Beach']);
 assert.ok(destinations.every(d=>d.municipality==='Calapan City'&&d.province==='Oriental Mindoro'));
 console.log('PASS: the ten client-selected destinations in order, stable routes, valid map data, and thirty photos or explicitly labelled placeholders.');
