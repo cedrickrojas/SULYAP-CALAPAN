@@ -418,12 +418,14 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
 .home-hero-collage .hero-content > p:not(.eyebrow) { color: var(--muted); }
 .hero-destination-collage { width: 100%; max-width: 560px; min-width: 0; margin: 0; justify-self: center; }
 .hero-collage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); aspect-ratio: 1.1; gap: 10px; }
-.hero-collage-tile { position: relative; min-width: 0; min-height: 0; overflow: hidden; border-radius: 16px; background: var(--soft); box-shadow: 0 5px 18px rgb(74 53 64 / 8%); }
+.hero-collage-tile { position: relative; display: block; width: 100%; padding: 0; border: 0; text-align: left; min-width: 0; min-height: 0; overflow: hidden; border-radius: 16px; background: var(--soft); box-shadow: 0 5px 18px rgb(74 53 64 / 8%); touch-action: manipulation; }
+.hero-collage-tile:focus-visible { outline: 3px solid var(--action); outline-offset: 3px; }
+.hero-collage-ripple { position: absolute; z-index: 2; inset: -50%; border-radius: 50%; background: radial-gradient(circle, rgb(255 255 255 / 75%), rgb(255 255 255 / 15%) 45%, transparent 70%); opacity: 0; pointer-events: none; }
 .hero-collage-featured { grid-column: span 2; grid-row: span 2; border-radius: 24px 16px 16px 16px; }
 .hero-collage-tile img { width: 100%; height: 100%; object-fit: cover; animation: sulyap-landscape 8s ease-out both; }
 .hero-collage-tile::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgb(28 29 32 / 72%)); pointer-events: none; }
-.hero-collage-tile > span { position: absolute; z-index: 1; bottom: 12px; left: 12px; right: 12px; color: #fff; font-size: .6875rem; font-weight: 500; line-height: 1.35; text-shadow: 0 1px 4px rgb(0 0 0 / 35%); }
-.hero-collage-featured > span { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; bottom: 18px; left: 18px; }
+.hero-collage-tile > .hero-collage-label { position: absolute; z-index: 1; bottom: 12px; left: 12px; right: 12px; color: #fff; font-size: .6875rem; font-weight: 500; line-height: 1.35; text-shadow: 0 1px 4px rgb(0 0 0 / 35%); }
+.hero-collage-featured > .hero-collage-label { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; bottom: 18px; left: 18px; }
 .hero-destination-collage figcaption { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: .6875rem; }
 .hero-destination-collage figcaption a { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; color: var(--action); text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 960px) {
@@ -439,8 +441,12 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
   .hero-collage-grid { gap: 7px; }
   .hero-collage-tile { border-radius: 10px; }
   .hero-collage-featured { border-radius: 18px 10px 10px 10px; }
-  .hero-collage-tile > span { bottom: 7px; left: 7px; right: 7px; font-size: .5625rem; }
-  .hero-collage-featured > span { font-size: 1.125rem; bottom: 12px; left: 12px; }
+  .hero-collage-tile > .hero-collage-label { bottom: 7px; left: 7px; right: 7px; font-size: .5625rem; }
+  .hero-collage-featured > .hero-collage-label { font-size: 1.125rem; bottom: 12px; left: 12px; }
   .hero-destination-collage figcaption { font-size: .625rem; }
 }
-@media (prefers-reduced-motion: reduce) { .hero-collage-tile img { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-collage-tile img { animation: none; }
+  .hero-collage-tile:active { box-shadow: inset 0 0 0 3px var(--action); }
+  .hero-collage-tile:active .hero-collage-ripple { opacity: .2; }
+}
