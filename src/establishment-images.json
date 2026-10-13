@@ -196,5 +196,28 @@
     "height": 1000,
     "position": "50% 68%",
     "illustrative": true
+  },
+  "auntie-lolas": {
+    "src": "/images/establishments/auntie-lolas.webp",
+    "alt": "Auntie Lola's Restaurant storefront and sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "puregold": {
+    "src": "/images/establishments/puregold.webp",
+    "alt": "Puregold Calapan storefront and sign",
+    "width": 800,
+    "height": 450,
+    "position": "50% 50%"
+  },
+  "kenny-rogers-calapan": {
+    "src": "/images/establishments/kenny-rogers-calapan.webp",
+    "alt": "Illustrative rotisserie chicken photo by Ennio Brehm; not the Calapan branch",
+    "width": 1200,
+    "height": 675,
+    "position": "50% 50%",
+    "illustrative": true,
+    "caption": "Illustrative photo; not the Calapan branch"
   }
 }

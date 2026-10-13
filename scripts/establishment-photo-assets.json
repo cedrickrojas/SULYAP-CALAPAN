@@ -303,5 +303,38 @@
     "note": "Illustrative stock photograph, not the named business, its premises, staff, or a Calapan location. Used under the Pexels License. Card explicitly labels this as an illustrative photo. Converted to WebP and compressed; display crops vary.",
     "license": "Pexels License",
     "licenseUrl": "https://www.pexels.com/license/"
+  },
+  {
+    "id": "auntie-lolas",
+    "name": "Auntie Lola's Restaurant",
+    "file": "establishments/auntie-lolas.webp",
+    "title": "Auntie Lola's Restaurant storefront and sign",
+    "author": "Published by Travel Oriental Mindoro",
+    "source": "https://www.travelorientalmindoro.ph/place/auntie-lolas-restaurant",
+    "url": "https://www.travelorientalmindoro.ph/uploads/places/119/gallery/20251210071642_2c8fd63a.jpg",
+    "note": "Photograph published in the provincial tourism listing. The listing gives the restaurant's address as Lumangbayan, Calapan City. Photographer and reuse license are not stated. Converted to WebP and compressed; display crops vary."
+  },
+  {
+    "id": "puregold",
+    "name": "Puregold Calapan",
+    "file": "establishments/puregold.webp",
+    "title": "Puregold Calapan storefront and sign",
+    "author": "Published by Travel Oriental Mindoro",
+    "source": "https://www.travelorientalmindoro.ph/place/puregold-calapan",
+    "url": "https://www.travelorientalmindoro.ph/uploads/places/634/gallery/20251212135318_8f6c2ab7.jpg",
+    "note": "Photograph published in the provincial tourism listing. The listing gives its address as Camilmil, Calapan City. Photographer and reuse license are not stated. Converted to WebP and compressed; display crops vary."
+  },
+  {
+    "id": "kenny-rogers-calapan",
+    "name": "Kenny Rogers Roasters - Calapan",
+    "file": "establishments/kenny-rogers-calapan.webp",
+    "title": "Illustrative rotisserie chicken photo; not the Calapan branch",
+    "author": "Ennio Brehm / Unsplash",
+    "source": "https://unsplash.com/photos/rotisserie-chicken-on-black-rod-ajqC4FSnLe8",
+    "url": "https://images.unsplash.com/photo-1542568772-de5a3430ee5e?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1200",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "note": "Licensed illustrative stock photograph of rotisserie chicken from a different location. It does not depict the Kenny Rogers Roasters branch in Calapan or an official Kenny Rogers product. The card labels the photo as illustrative. Converted to WebP and compressed; display crops vary.",
+    "reviewed": "2026-10-13"
   }
 ]

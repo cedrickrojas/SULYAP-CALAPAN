@@ -27,6 +27,12 @@ export const establishments = [
     source: 'https://www.travelorientalmindoro.ph/place/nuciti-calapan',
   },
   {
+    id: 'puregold', name: 'Puregold Calapan', category: 'malls', type: 'Mall & shopping center',
+    description: 'Grocery and retail shopping in Camilmil, Calapan City.',
+    address: 'Camilmil, Calapan City, Oriental Mindoro', phone: '(043) 288-2058', telephone: '+63432882058',
+    source: 'https://www.travelorientalmindoro.ph/place/puregold-calapan',
+  },
+  {
     id: 'coastline', name: 'Coastline Bar & Lounge', category: 'bars', type: 'Bar & lounge',
     description: 'A bar and lounge in Pachoca, Calapan City.',
     address: 'Pachoca, Calapan City, Oriental Mindoro',
@@ -73,6 +79,18 @@ export const establishments = [
     description: 'A restaurant listed in Barangay Guinobatan, with a published contact for visit inquiries.',
     address: 'Brgy. Guinobatan, Calapan City', phone: '0906 539 0839', telephone: '+639065390839',
     source: 'https://www.travelorientalmindoro.ph/place/spice-plates-1c057956',
+  },
+  {
+    id: 'kenny-rogers-calapan', name: 'Kenny Rogers Roasters - Calapan', category: 'restaurants', type: 'Restaurant',
+    description: 'Kenny Rogers Roasters at the Caltex station in Puting Tubig.',
+    address: 'Caltex Puting Tubig, Calapan City, Oriental Mindoro', phone: '0962 483 5589', telephone: '+639624835589',
+    source: 'https://kennyrogersdelivery.com.ph/', sourceLabel: 'Official website',
+  },
+  {
+    id: 'auntie-lolas', name: "Auntie Lola's Restaurant", category: 'restaurants', type: 'Restaurant',
+    description: 'A restaurant listed in Lumangbayan, Calapan City.',
+    address: 'Lumangbayan, Calapan City, Oriental Mindoro', phone: '0977 811 7636', telephone: '+639778117636',
+    source: 'https://www.travelorientalmindoro.ph/place/auntie-lolas-restaurant',
   },
   {
     id: 'merls', name: "Merl's Native Delicacies", category: 'souvenirs', type: 'Pasalubong & delicacies',

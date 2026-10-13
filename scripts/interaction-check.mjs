@@ -8,8 +8,18 @@ const context=await browser.newContext({viewport:{width:1440,height:1000},reduce
 const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 const origin='http://127.0.0.1:5173';
 async function noOverflow(){assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1),'Horizontal overflow at '+page.url());}
-await page.goto(origin+'/qr-directory');await page.waitForFunction(()=>document.querySelectorAll('.qr-card .qr-image').length===10);
-for(let i=0;i<10;i++){const card=page.locator('.qr-card').nth(i);assert.equal(await card.locator('a').count(),0,'QR cards should open destinations through scanning');await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});}
+await page.goto(origin+'/qr-directory');await page.waitForURL('**/destinations');
+assert.equal(await page.locator('a[href="/qr-directory"]').count(),0);
+assert.equal(await page.locator('nav[aria-label="Main navigation"] a').count(),4);
+for(const [i,d] of destinations.entries()){
+ await page.getByRole('button',{name:'View QR code for '+d.name,exact:true}).click();
+ const card=page.locator('.qr-dialog[open] .qr-card');await card.locator('.qr-image').waitFor();
+ assert.equal(await card.locator('a').count(),0,'QR cards should open destinations through scanning');
+ await card.locator('.qr-image').screenshot({path:'.sites-runtime/qa/qr-'+(i+1)+'.png'});
+ await page.getByRole('button',{name:'Close QR code'}).click();
+}
+await page.getByRole('button',{name:'View QR code for '+destinations[0].name,exact:true}).click();
+await page.locator('.qr-dialog[open] .qr-image').waitFor();
 const scannedPage=await context.newPage();await scannedPage.setViewportSize({width:390,height:844});
 for(const d of destinations){
  await scannedPage.goto(origin+d.qrCodeUrl+'#information');
@@ -22,11 +32,11 @@ await scannedPage.close();console.log('PASS: all ten scanned QR links immediatel
 const downloadEvent=page.waitForEvent('download');await page.locator('.qr-card').first().getByRole('button',{name:'Download QR'}).click();const download=await downloadEvent;assert.ok(download.suggestedFilename().endsWith('.png'));await download.saveAs('.sites-runtime/qa/downloaded-qr.png');
 const png=readFileSync('.sites-runtime/qa/downloaded-qr.png');assert.deepEqual([...png.subarray(0,8)],[137,80,78,71,13,10,26,10],'Download must contain real PNG bytes');assert.equal(png.readUInt32BE(16),1000);assert.equal(png.readUInt32BE(20),1000);
 await page.evaluate(()=>{const observer=new MutationObserver(()=>{document.querySelectorAll('iframe[title=\"Printable destination QR code\"]').forEach(frame=>{frame.contentWindow.print=()=>window.__qrPrinted=true;});});observer.observe(document.body,{childList:true,subtree:true});});
-await page.locator('.qr-card').first().getByRole('button',{name:'Print QR'}).click();await page.waitForFunction(()=>window.__qrPrinted===true);assert.equal(await page.frameLocator('iframe[title="Printable destination QR code"]').locator('h1').innerText(),destinations[0].name);console.log('PASS: QR directory, 1000px PNG download, print label, and gallery controls.');
+await page.locator('.qr-card').first().getByRole('button',{name:'Print QR'}).click();await page.waitForFunction(()=>window.__qrPrinted===true);assert.equal(await page.frameLocator('iframe[title="Printable destination QR code"]').locator('h1').innerText(),destinations[0].name);console.log('PASS: removed QR directory redirects; destination QR popups, 1000px PNG download, print label, and gallery controls.');
 for(const path of ['/','/destinations','/destination/1','/destination/5/location','/qr-directory','/about','/how-it-works']){
  await page.setViewportSize({width:390,height:844});await page.goto(origin+path);await noOverflow();
 }
-await page.goto(origin);assert.equal(await page.locator('.menu-toggle').count(),0);await page.locator('nav').getByRole('link',{name:'Destinations',exact:true}).click();assert.ok(page.url().endsWith('/destinations'));assert.equal(await page.locator('nav[aria-label="Main navigation"] a:visible').count(),5);
+await page.goto(origin);assert.equal(await page.locator('.menu-toggle').count(),0);await page.locator('nav').getByRole('link',{name:'Destinations',exact:true}).click();assert.ok(page.url().endsWith('/destination/5#information'));assert.equal(await page.locator('nav[aria-label="Main navigation"] a:visible').count(),4);
 await page.goto(origin);await page.locator('img').evaluateAll(images=>images.forEach(img=>img.loading='eager'));await page.waitForFunction(()=>Array.from(document.querySelectorAll('img')).every(img=>img.complete&&img.naturalWidth>0));await page.screenshot({path:'.sites-runtime/qa/home-mobile.png',fullPage:true});
 await page.goto(origin+'/destination/1');await page.locator('img').evaluateAll(images=>images.forEach(img=>img.loading='eager'));await page.waitForFunction(()=>Array.from(document.querySelectorAll('img')).every(img=>img.complete&&img.naturalWidth>0));await page.screenshot({path:'.sites-runtime/qa/destination-mobile.png',fullPage:true});
 await page.goto(origin+'/unknown-place');assert.ok((await page.locator('h1').innerText()).includes('isn’t on the map'));

@@ -5,10 +5,11 @@ import {establishments} from '../src/establishments.js';
 
 const origin = process.argv[2] || 'http://127.0.0.1:5174';
 const categories = [
+  ['restaurants', 'Restaurants'], ['malls', 'Malls'],
   ['souvenirs', 'Souvenir Shops'], ['hotels', 'Hotels'], ['travel-agencies', 'Travel Agencies'],
 ];
-assert.equal(establishments.length, 27, 'Keep the original twelve listings and add fifteen');
-assert.equal(new Set(establishments.map(place => place.id)).size, 27);
+assert.equal(establishments.length, 30, 'Keep the original twelve listings and add fifteen');
+assert.equal(new Set(establishments.map(place => place.id)).size, 30);
 for (const place of establishments) {
   assert.match(place.address, /Calapan City/);
   assert.equal(new URL(place.source).protocol, 'https:');
@@ -33,7 +34,7 @@ try {
   await page.goto(`${origin}/establishments`);
   const cards = page.locator('.establishment-card');
   const filters = page.getByRole('group', {name: 'Filter establishments'});
-  await expect(cards).toHaveCount(27);
+  await expect(cards).toHaveCount(30);
   await expect(filters.getByRole('button')).toHaveCount(7);
   for (const [key, label] of categories) {
     assert.equal(establishments.filter(place => place.category === key).length, 5);
@@ -81,21 +82,21 @@ try {
   await page.goBack();
   await expect(page).toHaveURL(`${origin}/establishments?type=hotels`);
   await expect(cards).toHaveCount(5);
-  await filters.getByRole('button', {name: /^All Establishments\s*27$/}).click();
+  await filters.getByRole('button', {name: /^All Establishments\s*30$/}).click();
   await expect(page).toHaveURL(`${origin}/establishments`);
-  await expect(cards).toHaveCount(27);
+  await expect(cards).toHaveCount(30);
   await expect(page.locator('.establishment-photo-pending')).toHaveCount(0);
   for (const image of await cards.locator('img').all()) {
     await image.scrollIntoViewIfNeeded();
     await image.evaluate(element => element.decode());
   }
   await page.goto(`${origin}/establishments?type=unknown`);
-  await expect(cards).toHaveCount(27);
+  await expect(cards).toHaveCount(30);
   for (const [key, label] of categories) {
     await expect(page.locator('footer').getByRole('link', {name: label, exact: true})).toHaveAttribute('href', `/establishments?type=${key}`);
   }
   assert.deepEqual(errors, []);
-  console.log('PASS: 27 Calapan listings; five souvenir shops, five hotels and five travel agencies; filter URLs/history, contacts/maps/sources, photos/credits, and 320–1440px layouts.');
+  console.log('PASS: 30 Calapan listings; five restaurants, malls, souvenir shops, hotels and travel agencies; filter URLs/history, contacts/maps/sources, photos/credits, and 320–1440px layouts.');
 } finally {
   await browser.close();
 }

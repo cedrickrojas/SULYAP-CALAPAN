@@ -8,7 +8,7 @@ const targets = [
   '.destination-card', '.establishment-card', '.information-card', '.gallery-thumb',
   '.steps article', '.tips-section', '.how-bottom', '.visitor-note', '.practical-info',
   '.detail-content > .detail-prose', '.detail-content > .detail-list > li',
-  '.qr-directory-intro', '.establishments-note',
+  '.establishments-note',
 ].map(selector => `#main-content ${selector}`).concat('footer .footer-top > div').join(',');
 
 export default function MotionEnhancements() {
