@@ -29,6 +29,8 @@ Information includes source links and explicit notes where current schedules, fe
 The client-supplied [Travel Oriental Mindoro portal](https://www.travelorientalmindoro.ph/) was reviewed on October 8, 2026. It supplies descriptions, listed admission, destination contacts, four additional map pins, local tourism-office contacts, and the Batangas–Calapan ferry approach. Further-reading links appear on every information page. The portal does not provide complete current hours or individual listings for all ten selected places; those gaps remain explicit. Review decisions and source discrepancies are recorded in `scripts/calapan-source-notes.md`.
 
 ## QR codes for real visitors
+Download QR requests `/api/qr-download?id=:id`, which returns the branded 1000 x 1000 QR PNG with an attachment filename. It starts a normal HTTP file download on desktop and mobile, without opening a share sheet or showing long-press/browser-opening instructions. The server uses the same QR layout, colors, destination routes, and logo as the browser preview. Vercel deploys this endpoint from `api/qr-download.js`; the configured SPA rewrite leaves `/api/` requests alone. Vite dev and preview serve the same handler locally. A host serving only the static `dist` folder must also provide this Node endpoint for QR downloads.
+
 Open `/destinations` and choose View QR Code on any destination card. Each offers Download QR (1000 x 1000 PNG for phone galleries and sharing) and Print QR (a destination-specific label). QR cards, popups, and the sample code on How It Works show no button or link that opens the destination; scan the code to open its information menu. QR cards, destination QR popups, and printed labels show the QR image and destination details without displaying the raw URL. Every displayed, downloaded, and printed QR code includes the client-supplied Sulyap logo in its center, with a small white plate and high error correction. Download or print fresh copies to include the logo; earlier codes still use the same destination links. QR codes are generated in the browser without a third-party QR API. Scanning opens `/destination/:id#information` directly at the destination information menu. The directory and recommended destination cards offer QR viewing instead of direct links to destination content. Information cards, section links, and return links remain available once the destination guide has opened from its QR URL. Download or print fresh QR codes after this update; previously saved codes retain their original links.
 
 By default, codes point to the origin where the site is open. A localhost URL is accessible only on that computer. Before printing permanent signs, deploy the site to a public HTTPS address. If the QR codes should use a fixed official address even in local previews, copy `.env.example` to `.env.local`:
@@ -55,8 +57,9 @@ npm run check
 node scripts/check-startup.mjs
 node scripts/check-destination-session.mjs
 node scripts/check-motion.mjs
+node scripts/check-qr-actions.mjs
 node scripts/smoke.mjs
-python scripts/check-qr.py
+python scripts/check-qr.py http://127.0.0.1:5173 .sites-runtime/qa/chromium
 npm run build
 ```
 The browser check uses the local URL `http://127.0.0.1:5173`. Start the dev server before it. It requires Playwright Chromium (`npx playwright install chromium` if absent). QR decoding verification uses Python OpenCV available in this workspace.
@@ -74,7 +77,9 @@ Current attribution, original source pages, and license details are listed at `/
 - `src/establishments.js`: 30 Calapan establishment listings, addresses, source links, and available phone contacts
 - `src/features.jsx`: lightbox galleries and QR display/download/print
 - `src/qr-code.js`: shared QR generation with the existing client logo embedded in the center
-- `src/qr-actions.jsx`: prepared PNG downloads, native mobile sharing, print layout, and in-app browser fallback
+- `src/qr-actions.jsx`: direct HTTP QR downloads, prepared print images, and mobile print sharing
+- `src/qr-layout.js`: QR geometry, colors, and download filenames shared by browser and server
+- `api/qr-download.js`, `server/qr-download.js`: Vercel download handler and branded PNG rendering
 - `src/destinations.js`: editable destination content
 - `src/visitor-details.js`: destination-specific precautions, facilities/accessibility planning, fares and return-trip advice
 - `src/styles.css`: feminine pink theme, responsive layouts, reduced-motion support

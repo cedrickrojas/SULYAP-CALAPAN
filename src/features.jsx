@@ -1,7 +1,7 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {Camera,X,ChevronLeft,ChevronRight,QrCode,MapPin} from 'lucide-react';
 import {brandedQrDataUrl} from './qr-code';
-import QRActions from './qr-actions';
+import QRActions,{useQrExport} from './qr-actions';
 import {destinationUrl} from './destinations';
 const num=id=>String(id).padStart(2,'0');
 export function PhotoGallery({destination:d,embedded=false}){
@@ -16,5 +16,11 @@ export function QRCodeImage({destination:d}){
  if(error)return <p role="alert">The QR code could not be generated. Refresh the page to try again.</p>;
  return src?<img className="qr-image" src={src} alt={`QR code linking directly to ${d.name}`}/>:<div className="qr-loading" role="status">Preparing QR code…</div>;
 }
-export function QRCodeCard({destination:d,compact=false}){return <article className={`qr-card ${compact?'modal-qr-card':''}`}><div className="qr-card-heading"><span>QR CODE {num(d.id)}</span><QrCode size={18}/></div><h3>{d.name}</h3><p className="location-line"><MapPin size={14}/>{d.province}</p><QRCodeImage destination={d}/><p className="scan-label">Scan to Explore</p><QRActions key={d.id} destination={d}/></article>;}
+export function QRCodeCard({destination:d,compact=false}){
+ const qr=useQrExport(d);
+ return <article className={`qr-card ${compact?'modal-qr-card':''}`}><div className="qr-card-heading"><span>QR CODE {num(d.id)}</span><QrCode size={18}/></div><h3>{d.name}</h3><p className="location-line"><MapPin size={14}/>{d.province}</p>
+  {qr.asset?<img className="qr-image" src={qr.asset.imageUrl} alt={`QR code linking directly to ${d.name}`}/>:!qr.error&&<div className="qr-loading" role="status">Preparing QR code&#8230;</div>}
+  <p className="scan-label">Scan to Explore</p><QRActions key={d.id} destination={d} qr={qr}/>
+ </article>;
+}
 export function QRModal({destination:d,onClose}){const ref=useRef(null);useEffect(()=>{const node=ref.current;node.showModal();return()=>node.close();},[]);return <dialog ref={ref} className="qr-dialog" aria-label={`QR code for ${d.name}`} onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}><button className="icon-button modal-close" aria-label="Close QR code" onClick={onClose}><X/></button><QRCodeCard destination={d} compact/></dialog>;}

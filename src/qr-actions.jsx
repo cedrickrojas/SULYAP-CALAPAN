@@ -3,10 +3,9 @@ import { createPortal, flushSync } from 'react-dom';
 import { Download, Printer } from 'lucide-react';
 import { destinationUrl } from './destinations';
 import { prepareQrExport } from './qr-code';
+import { qrFilename } from './qr-layout.js';
 
 const embeddedBrowser = () => /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Messenger|Instagram/i.test(navigator.userAgent);
-const mobileBrowser = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 function canShareFile(file) {
   try {
@@ -16,15 +15,12 @@ function canShareFile(file) {
   }
 }
 
-export default function QRActions({ destination: d }) {
+export function useQrExport(d) {
   const [asset, setAsset] = useState(null);
   const [error, setError] = useState('');
-  const [sharing, setSharing] = useState(false);
-  const [printing, setPrinting] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const url = destinationUrl(d);
-  const filename = `sulyap-${String(d.id).padStart(2, '0')}-${d.slug}-qr.png`;
-  const inApp = embeddedBrowser();
+  const filename = qrFilename(d);
 
   useEffect(() => {
     let alive = true;
@@ -37,6 +33,15 @@ export default function QRActions({ destination: d }) {
     });
     return () => { alive = false; };
   }, [url, filename, attempt]);
+
+  return { asset, error, setError, filename, retry: () => setAttempt(value => value + 1) };
+}
+
+export default function QRActions({ destination: d, qr }) {
+  const { asset, error, setError, filename, retry } = qr;
+  const [sharing, setSharing] = useState(false);
+  const [printing, setPrinting] = useState(false);
+  const inApp = embeddedBrowser();
 
   useEffect(() => {
     if (!printing) return;
@@ -58,7 +63,7 @@ export default function QRActions({ destination: d }) {
       await navigator.share({ files: [asset.file], title: `${d.name} QR code` });
     } catch (reason) {
       if (reason?.name !== 'AbortError') {
-        setError('Sharing did not open. Open this page in Chrome or Safari and try again.');
+        setError('Printing did not open. Download the QR and print the saved PNG.');
       }
     } finally {
       setSharing(false);
@@ -68,24 +73,15 @@ export default function QRActions({ destination: d }) {
   function download() {
     if (!asset || sharing) return;
     setError('');
-    if (inApp || mobileBrowser()) {
-      if (canShareFile(asset.file)) {
-        void shareFile();
-        return;
-      }
-      if (inApp) {
-        setError('Saving is unavailable here. Open this page in Chrome or Safari and try again.');
-        return;
-      }
-    }
     const link = document.createElement('a');
-    link.href = asset.imageUrl;
+    // A normal HTTP attachment lets the host's download manager receive the file.
+    link.href = `/api/qr-download?id=${d.id}`;
     link.download = filename;
     document.body.appendChild(link);
     try {
       link.click();
     } catch {
-      setError('The download did not open. Open this page in Chrome or Safari and try again.');
+      setError('The QR download could not start. Please try again.');
     } finally {
       link.remove();
     }
@@ -97,7 +93,7 @@ export default function QRActions({ destination: d }) {
     if (inApp) {
       // Android WebViews need native host support for printing; window.print can do nothing.
       if (canShareFile(asset.file)) void shareFile();
-      else setError('Printing is unavailable here. Open this page in Chrome or Safari and try again.');
+      else setError('Printing is not supported in this app. Download the QR and print the saved PNG.');
       return;
     }
     try {
@@ -107,7 +103,7 @@ export default function QRActions({ destination: d }) {
     } catch {
       setPrinting(false);
       document.body.classList.remove('sulyap-printing');
-      setError('Printing did not open. Open this page in Chrome or Safari, or print the saved PNG.');
+      setError('Printing did not open. Download the QR and print the saved PNG.');
     }
   }
 
@@ -119,7 +115,7 @@ export default function QRActions({ destination: d }) {
     {!asset && !error && <p className="qr-action-status" role="status">Preparing download and print&#8230;</p>}
     {sharing && <p className="qr-action-status" role="status">Choose a save or print option in your device's share menu.</p>}
     {error && <p className="error-message" role="alert">{error}</p>}
-    {!asset && error && <button type="button" className="button outline small" onClick={() => setAttempt(value => value + 1)}>Try again</button>}
+    {!asset && error && <button type="button" className="button outline small" onClick={retry}>Try again</button>}
     {asset && createPortal(<div className={`qr-print-sheet${printing ? ' is-active' : ''}`}>
       <h1>{d.name}</h1>
       <p>SCAN TO LEARN MORE &middot; DESTINATION {String(d.id).padStart(2, '0')}</p>

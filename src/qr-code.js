@@ -1,13 +1,24 @@
 import QRCode from 'qrcode';
+import { qrColors, qrLayout } from './qr-layout.js';
 
 let logoPromise;
 
 function loadLogo() {
   if (!logoPromise) {
-    logoPromise = fetch('/branding/sulyap-logo.svg').then(async response => {
-      if (!response.ok) throw new Error('Could not load the QR logo');
-      return 'data:image/svg+xml;base64,' + btoa(await response.text());
-    }).catch(error => {
+    logoPromise = (async () => {
+      const image = new Image();
+      image.src = '/branding/sulyap-logo.jpg';
+      await image.decode();
+      // Match the branding SVG's viewBox crop, using its original raster image.
+      // Nested SVG images can lose their contents when rasterized by mobile WebKit.
+      const canvas = document.createElement('canvas');
+      canvas.width = 995;
+      canvas.height = 1060;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Could not prepare the QR logo');
+      context.drawImage(image, 130, 95, 995, 1060, 0, 0, 995, 1060);
+      return { image: canvas, dataUrl: canvas.toDataURL('image/png') };
+    })().catch(error => {
       logoPromise = undefined;
       throw error;
     });
@@ -17,19 +28,15 @@ function loadLogo() {
 
 export async function brandedQrSvg(url, { width = 360, margin = 4 } = {}) {
   const logo = await loadLogo();
-  const code = QRCode.create(url, { errorCorrectionLevel: 'H' });
+  const { version, plateSize, start } = qrLayout(url, margin);
   const svg = await QRCode.toString(url, {
-    type: 'svg', width, margin, version: code.version,
-    errorCorrectionLevel: 'H', color: { dark: '#30232b', light: '#ffffff' },
+    type: 'svg', width, margin, version,
+    errorCorrectionLevel: 'H', color: qrColors,
   });
-  // Keep the logo plate small and align its edges to whole QR modules.
-  let plateSize = Math.floor(code.modules.size * 0.2);
-  if (plateSize % 2 === 0) plateSize -= 1;
-  const start = margin + (code.modules.size - plateSize) / 2;
   const logoSize = plateSize - 2;
   return svg.replace('</svg>',
     `<rect x="${start}" y="${start}" width="${plateSize}" height="${plateSize}" fill="#fff"/>` +
-    `<image href="${logo}" x="${start + 1}" y="${start + 1}" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet"/></svg>`);
+    `<image href="${logo.dataUrl}" x="${start + 1}" y="${start + 1}" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet"/></svg>`);
 }
 
 export async function brandedQrDataUrl(url, options) {
@@ -38,18 +45,21 @@ export async function brandedQrDataUrl(url, options) {
 
 // Phone galleries and photo pickers need a raster image rather than an SVG.
 export async function brandedQrPngBlob(url, { width = 1000, margin = 4 } = {}) {
-  const image = new Image();
-  image.src = await brandedQrDataUrl(url, { width, margin });
-  await image.decode();
-
+  const logo = await loadLogo();
+  const { version, size, plateSize, start } = qrLayout(url, margin);
   const canvas = document.createElement('canvas');
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
+  await QRCode.toCanvas(canvas, url, {
+    width, margin, version, errorCorrectionLevel: 'H', color: qrColors,
+  });
   const context = canvas.getContext('2d');
   if (!context) throw new Error('Could not prepare the QR image');
+  const scale = canvas.width / size;
   context.fillStyle = '#ffffff';
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  context.drawImage(image, 0, 0);
+  context.fillRect(start * scale, start * scale, plateSize * scale, plateSize * scale);
+  // Composite the decoded raster logo directly; do not rasterize a nested SVG.
+  const logoHeight = (plateSize - 2) * scale;
+  const logoWidth = logoHeight * logo.image.width / logo.image.height;
+  context.drawImage(logo.image, (canvas.width - logoWidth) / 2, (canvas.height - logoHeight) / 2, logoWidth, logoHeight);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(blob => {
