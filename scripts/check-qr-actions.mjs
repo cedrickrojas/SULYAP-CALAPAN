@@ -120,6 +120,9 @@ try {
         Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => sharing });
         Object.defineProperty(navigator, 'share', { configurable: true, value: sharing ? ({ files }) => {
           window.__shares.push({ type: files[0].type, activation: navigator.userActivation.isActive });
+          window.__sharedName = files[0].name;
+          window.__sharedBytes = files[0].arrayBuffer().then(buffer => [...new Uint8Array(buffer)]);
+          if (window.__holdShare) return new Promise(resolve => { window.__releaseShare = resolve; });
           return window.__shareError ? Promise.reject(new DOMException('Share failed', window.__shareError)) : Promise.resolve();
         } : undefined });
         // Even without honoring the HTML download attribute, the HTTP header must download.
@@ -131,6 +134,39 @@ try {
         window.print = () => { throw new Error('In-app window.print must not be used'); };
       }, sharing);
       await ready(page);
+      if (platform === 'ios') {
+        let downloadRequests = 0;
+        page.on('request', request => { if (request.url().includes('/api/qr-download')) downloadRequests++; });
+        const currentUrl = page.url();
+        if (sharing) await page.evaluate(() => { window.__holdShare = true; });
+        await page.getByRole('button', { name: 'Download QR', exact: true }).click();
+        if (sharing) {
+          assert.deepEqual(await page.evaluate(() => window.__shares[0]), { type: 'image/png', activation: true });
+          assert.match(await page.evaluate(() => window.__sharedName), /^sulyap-01-.+-qr\.png$/);
+          assert.match(await page.getByRole('status').innerText(), /Choose Save Image/);
+          await page.evaluate(() => { window.__holdShare = false; window.__releaseShare(); });
+          await page.waitForFunction(() => !document.querySelector('.qr-tools button').disabled);
+          const bytes = Buffer.from(await page.evaluate(() => window.__sharedBytes));
+          await assertPng(page, bytes);
+          writeFileSync(`${qa}/ios-save-image.png`, bytes);
+          await page.evaluate(() => { window.__shareError = 'AbortError'; });
+          await page.getByRole('button', { name: 'Download QR', exact: true }).click();
+          assert.equal(await page.getByRole('alert').count(), 0);
+          await page.evaluate(() => { window.__shareError = 'NotAllowedError'; });
+          await page.getByRole('button', { name: 'Download QR', exact: true }).click();
+          await page.getByRole('alert').waitFor();
+          assert.match(await page.getByRole('alert').innerText(), /photo save menu could not open/);
+        } else {
+          await page.getByRole('alert').waitFor();
+          assert.match(await page.getByRole('alert').innerText(), /photo save menu is not available/);
+        }
+        assert.equal(downloadRequests, 0, 'iOS saving must not navigate to the PNG attachment');
+        assert.equal(page.url(), currentUrl);
+        assert.equal(await page.locator('.qr-card').isVisible(), true);
+        assert.equal(await page.locator('.qr-save-help, .qr-save-preview, .qr-browser-help').count(), 0);
+        await context.close();
+        continue;
+      }
       await downloadQr(page, 1, `${qa}/${platform}-${sharing ? 'share' : 'no-share'}.png`);
       assert.equal(await page.evaluate(() => window.__shares.length), 0, 'Download QR must never open the share sheet');
       assert.equal(await page.getByRole('alert').count(), 0);
@@ -154,7 +190,32 @@ try {
       await context.close();
     }
   }
-  console.log('PASS: Android/iOS browser simulations download the HTTP PNG with or without sharing support and without long-press or browser-opening UI.');
+  console.log('PASS: iOS invokes the native image save API with a branded PNG and handles cancellation/unsupported hosts; Android downloads the HTTP PNG. Native Photos/Gallery writes require device verification.');
+
+  // Model a host that previews PNG attachments instead of honoring download hints.
+  const previewHost = await openPage({ userAgent: android });
+  await previewHost.context.addInitScript(() => {
+    const click = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function () {
+      this.removeAttribute('download');
+      return click.call(this);
+    };
+  });
+  await previewHost.page.route('**/api/qr-download?id=1', async route => {
+    const response = await route.fetch();
+    const headers = { ...response.headers() };
+    delete headers['content-disposition'];
+    await route.fulfill({ response, headers });
+  });
+  await ready(previewHost.page);
+  const currentUrl = previewHost.page.url();
+  await previewHost.page.getByRole('button', { name: 'Download QR', exact: true }).click();
+  await previewHost.page.frameLocator('iframe[title="QR file download"]').locator('img').waitFor({ state: 'attached' });
+  assert.equal(previewHost.page.url(), currentUrl);
+  assert.equal(await previewHost.page.locator('.qr-card').isVisible(), true);
+  assert.equal(await previewHost.page.locator('iframe[title="QR file download"]').isVisible(), false);
+  await previewHost.context.close();
+  console.log('PASS: simulated attachment previews stay in a hidden frame and do not replace the destination page. This does not verify saving to iPhone Photos.');
 
   const retry = await openPage();
   await retry.page.route('**/branding/sulyap-logo.jpg', route => route.abort());

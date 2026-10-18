@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import { Download, Printer } from 'lucide-react';
 import { destinationUrl } from './destinations';
@@ -6,10 +6,12 @@ import { prepareQrExport } from './qr-code';
 import { qrFilename } from './qr-layout.js';
 
 const embeddedBrowser = () => /FBAN|FBAV|FB_IAB|FBIOS|FB4A|Messenger|Instagram/i.test(navigator.userAgent);
+const iosDevice = () => /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 function canShareFile(file) {
   try {
-    return Boolean(navigator.share && navigator.canShare?.({ files: [file] }));
+    return Boolean(navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] })));
   } catch {
     return false;
   }
@@ -39,8 +41,10 @@ export function useQrExport(d) {
 
 export default function QRActions({ destination: d, qr }) {
   const { asset, error, setError, filename, retry } = qr;
-  const [sharing, setSharing] = useState(false);
+  const [shareAction, setShareAction] = useState('');
+  const sharing = Boolean(shareAction);
   const [printing, setPrinting] = useState(false);
+  const downloadTarget = `qr-download-${useId()}`;
   const inApp = embeddedBrowser();
 
   useEffect(() => {
@@ -56,27 +60,36 @@ export default function QRActions({ destination: d, qr }) {
     };
   }, [printing]);
 
-  async function shareFile() {
-    setSharing(true);
+  async function shareFile(action) {
+    setShareAction(action);
     try {
       // No QR generation or other awaits before this call.
-      await navigator.share({ files: [asset.file], title: `${d.name} QR code` });
+      await navigator.share({ files: [asset.file] });
     } catch (reason) {
       if (reason?.name !== 'AbortError') {
-        setError('Printing did not open. Download the QR and print the saved PNG.');
+        setError(action === 'save' ? 'The photo save menu could not open. Please try again.' : 'Printing did not open. Download the QR and print the saved PNG.');
       }
     } finally {
-      setSharing(false);
+      setShareAction('');
     }
   }
 
   function download() {
     if (!asset || sharing) return;
     setError('');
+    if (iosDevice()) {
+      // iOS file downloads do not add images to Photos. Offer the native image save menu.
+      // Keep this call within the tap, using the PNG prepared before user activation.
+      if (canShareFile(asset.file)) void shareFile('save');
+      else setError('The photo save menu is not available in this app.');
+      return;
+    }
     const link = document.createElement('a');
     // A normal HTTP attachment lets the host's download manager receive the file.
     link.href = `/api/qr-download?id=${d.id}`;
     link.download = filename;
+    // Keep hosts that preview attachments from replacing the destination page.
+    link.target = downloadTarget;
     document.body.appendChild(link);
     try {
       link.click();
@@ -92,7 +105,7 @@ export default function QRActions({ destination: d, qr }) {
     setError('');
     if (inApp) {
       // Android WebViews need native host support for printing; window.print can do nothing.
-      if (canShareFile(asset.file)) void shareFile();
+      if (canShareFile(asset.file)) void shareFile('print');
       else setError('Printing is not supported in this app. Download the QR and print the saved PNG.');
       return;
     }
@@ -108,12 +121,13 @@ export default function QRActions({ destination: d, qr }) {
   }
 
   return <>
+    <iframe name={downloadTarget} title="QR file download" hidden/>
     <div className="qr-tools">
       <button type="button" disabled={!asset || sharing} onClick={download}><Download size={16}/> Download QR</button>
       <button type="button" disabled={!asset || sharing} onClick={print}><Printer size={16}/> Print QR</button>
     </div>
     {!asset && !error && <p className="qr-action-status" role="status">Preparing download and print&#8230;</p>}
-    {sharing && <p className="qr-action-status" role="status">Choose a save or print option in your device's share menu.</p>}
+    {sharing && <p className="qr-action-status" role="status">{shareAction === 'save' ? 'Choose Save Image to add the QR to Photos.' : "Choose a print option in your device's share menu."}</p>}
     {error && <p className="error-message" role="alert">{error}</p>}
     {!asset && error && <button type="button" className="button outline small" onClick={retry}>Try again</button>}
     {asset && createPortal(<div className={`qr-print-sheet${printing ? ' is-active' : ''}`}>
