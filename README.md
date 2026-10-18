@@ -74,6 +74,7 @@ Current attribution, original source pages, and license details are listed at `/
 - `src/establishments.js`: 30 Calapan establishment listings, addresses, source links, and available phone contacts
 - `src/features.jsx`: lightbox galleries and QR display/download/print
 - `src/qr-code.js`: shared QR generation with the existing client logo embedded in the center
+- `src/qr-actions.jsx`: prepared PNG downloads, native mobile sharing, print layout, and in-app browser fallback
 - `src/destinations.js`: editable destination content
 - `src/visitor-details.js`: destination-specific precautions, facilities/accessibility planning, fares and return-trip advice
 - `src/styles.css`: feminine pink theme, responsive layouts, reduced-motion support
@@ -82,6 +83,8 @@ Current attribution, original source pages, and license details are listed at `/
 - `public/branding/sulyap-logo.jpg`: the client's original Sulyap Calapan logo; the logo SVG and favicon embed this unchanged JPEG in a viewport that removes excess outer whitespace. The artwork appears on the startup screen and in the center of QR codes; the home banner uses a destination-photo collage, the header has navigation links without a logo, and the footer uses text without a logo.
 
 Maps require network access to OpenStreetMap; directions open Google Maps. Fonts use Google Fonts with local system fallbacks. Destination content and photo assets do not depend on an external content API.
+
+QR downloads are prepared as 1000px PNG files before the buttons become available. Mobile browsers use native file sharing where supported; Messenger/Facebook in-app browsers otherwise show a PNG that can be saved by pressing and holding. Print QR uses a dedicated QR-only print layout in regular browsers, and native share/print options plus browser instructions inside Messenger. In-app apps control whether native saving and printing are supported, so the fallback includes a copyable `/destination/:id/qr` page link for Chrome or Safari. Run `node scripts/check-qr-actions.mjs [origin]` against the local server to verify PNG output, print layout, simulated Android/iOS Messenger sharing, and blocked-API fallbacks. Actual device testing in Messenger is still required to verify the host app's menus and permissions.
 
 The seven client information requirements are mapped to the existing sections in `scripts/destination-information-requirements.md`. All ten destinations include specific precautions, transport and return arrangements, local tourism contact assistance, and facilities/accessibility questions. Unknown fees, schedules, and facilities remain clearly qualified rather than presented as confirmed. Tourism office opening hours are labelled separately from destination hours.
 

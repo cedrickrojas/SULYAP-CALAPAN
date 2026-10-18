@@ -1,6 +1,7 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {Camera,X,ChevronLeft,ChevronRight,QrCode,MapPin,Download,Printer} from 'lucide-react';
-import {brandedQrPngBlob,brandedQrDataUrl} from './qr-code';
+import {Camera,X,ChevronLeft,ChevronRight,QrCode,MapPin} from 'lucide-react';
+import {brandedQrDataUrl} from './qr-code';
+import QRActions from './qr-actions';
 import {destinationUrl} from './destinations';
 const num=id=>String(id).padStart(2,'0');
 export function PhotoGallery({destination:d,embedded=false}){
@@ -15,19 +16,5 @@ export function QRCodeImage({destination:d}){
  if(error)return <p role="alert">The QR code could not be generated. Refresh the page to try again.</p>;
  return src?<img className="qr-image" src={src} alt={`QR code linking directly to ${d.name}`}/>:<div className="qr-loading" role="status">Preparing QR code…</div>;
 }
-async function downloadQR(d,setError){
- setError('');
- try{
-  const blob=await brandedQrPngBlob(destinationUrl(d));
-  const url=URL.createObjectURL(blob),link=document.createElement('a');
-  link.href=url;
-  link.download=`sulyap-${num(d.id)}-${d.slug}-qr.png`;
-  document.body.appendChild(link);
-  try{link.click();}finally{link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
- }catch{setError('The QR download could not be prepared. Please try again.');}
-}
-async function printQR(d,setError){
- let frame;try{const image=await brandedQrDataUrl(destinationUrl(d),{width:900,margin:4});frame=document.createElement('iframe');frame.style.cssText='position:fixed;width:1px;height:1px;bottom:0;left:0;border:0;';frame.title='Printable destination QR code';document.body.appendChild(frame);const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html><head><title>Sulyap Destination QR code</title><style>body{font-family:Arial,sans-serif;text-align:center;padding:50px;color:#4a3540}img{width:300px;max-width:100%}h1{font-size:28px}small{font-size:18px}</style></head><body></body></html>');doc.close();const heading=doc.createElement('h1');heading.textContent=d.name;const caption=doc.createElement('small');caption.textContent='SCAN TO LEARN MORE · DESTINATION '+num(d.id);const img=doc.createElement('img');img.src=image;img.alt='Destination QR code';doc.body.append(heading,caption,img);await img.decode();frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});frame.contentWindow.focus();frame.contentWindow.print();}catch{frame?.remove();setError('Printing could not open. Download the QR code and print the saved file instead.');}
-}
-export function QRCodeCard({destination:d,compact=false}){const[error,setError]=useState('');return <article className={`qr-card ${compact?'modal-qr-card':''}`}><div className="qr-card-heading"><span>QR CODE {num(d.id)}</span><QrCode size={18}/></div><h3>{d.name}</h3><p className="location-line"><MapPin size={14}/>{d.province}</p><QRCodeImage destination={d}/><p className="scan-label">Scan to Explore</p><div className="qr-tools"><button onClick={()=>downloadQR(d,setError)}><Download size={16}/> Download QR</button><button onClick={()=>printQR(d,setError)}><Printer size={16}/> Print QR</button></div>{error&&<p className="error-message" role="alert">{error}</p>}</article>;}
+export function QRCodeCard({destination:d,compact=false}){return <article className={`qr-card ${compact?'modal-qr-card':''}`}><div className="qr-card-heading"><span>QR CODE {num(d.id)}</span><QrCode size={18}/></div><h3>{d.name}</h3><p className="location-line"><MapPin size={14}/>{d.province}</p><QRCodeImage destination={d}/><p className="scan-label">Scan to Explore</p><QRActions key={d.id} destination={d}/></article>;}
 export function QRModal({destination:d,onClose}){const ref=useRef(null);useEffect(()=>{const node=ref.current;node.showModal();return()=>node.close();},[]);return <dialog ref={ref} className="qr-dialog" aria-label={`QR code for ${d.name}`} onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}><button className="icon-button modal-close" aria-label="Close QR code" onClick={onClose}><X/></button><QRCodeCard destination={d} compact/></dialog>;}

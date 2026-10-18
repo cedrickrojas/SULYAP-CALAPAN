@@ -58,3 +58,18 @@ export async function brandedQrPngBlob(url, { width = 1000, margin = 4 } = {}) {
     }, 'image/png');
   });
 }
+
+// Prepare before the tap: native sharing must run within the user's gesture.
+export async function prepareQrExport(url, filename) {
+  const blob = await brandedQrPngBlob(url);
+  const imageUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Could not prepare the QR preview'));
+    reader.readAsDataURL(blob);
+  });
+  const image = new Image();
+  image.src = imageUrl;
+  await image.decode();
+  return { file: new File([blob], filename, { type: 'image/png' }), imageUrl };
+}
