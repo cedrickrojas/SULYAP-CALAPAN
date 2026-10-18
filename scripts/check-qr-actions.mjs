@@ -74,46 +74,44 @@ try {
     assert.equal(await page.evaluate(() => window.__shares.length), 1);
     assert.deepEqual(await page.evaluate(() => window.__shares[0].type), 'image/png');
     assert.equal(await page.evaluate(() => window.__shares[0].activation), true);
-    assert.match(await page.locator('.qr-save-preview > img').getAttribute('src'), /^data:image\/png;base64,/);
+    assert.equal(await page.locator('.qr-save-preview, .qr-browser-help').count(), 0);
     await page.getByRole('button', { name: 'Print QR', exact: true }).click();
     assert.equal(await page.evaluate(() => window.__shares.length), 2);
     assert.equal(await page.evaluate(() => window.__printCalled), undefined);
-    assert.equal(await page.getByRole('heading', { name: 'Print your QR code', exact: true }).count(), 1);
+    assert.equal(await page.getByRole('heading', { name: 'Print your QR code', exact: true }).count(), 0);
     await page.evaluate(() => { window.__shareError = 'AbortError'; });
     await page.getByRole('button', { name: 'Download QR', exact: true }).click();
     assert.equal(await page.getByRole('alert').count(), 0, 'Cancelling the share sheet is not an error');
     await page.evaluate(() => { window.__shareError = 'NotAllowedError'; });
     await page.getByRole('button', { name: 'Download QR', exact: true }).click();
     await page.getByRole('alert').waitFor();
-    assert.ok(await page.getByRole('button', { name: 'Copy QR page link' }).isVisible());
+    assert.match(await page.getByRole('alert').innerText(), /Open this page in Chrome or Safari/);
+    assert.equal(await page.getByRole('button', { name: 'Copy QR page link' }).count(), 0);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await context.close();
   }
-  console.log('PASS: Android/iOS Messenger native file sharing keeps user activation; print uses native options; cancellation and sharing failures have usable fallbacks.');
+  console.log('PASS: Android/iOS Messenger save/print sharing works without extra preview or copy-link UI; cancellation stays silent and failures show a concise error.');
 
   const fallback = await openPage({ userAgent: android });
   await fallback.context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: undefined });
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: () => Promise.reject(new Error('Blocked')) } });
     window.print = () => { throw new Error('In-app printing should not be invoked'); };
   });
   let unwantedDownloads = 0;
   fallback.page.on('download', () => unwantedDownloads++);
   await ready(fallback.page, '/destination/5/qr');
   await fallback.page.getByRole('button', { name: 'Download QR', exact: true }).click();
-  await fallback.page.locator('.qr-save-preview > img').evaluate(image => image.decode());
-  const handoff = await fallback.page.getByRole('textbox', { name: 'QR page link' }).inputValue();
-  assert.equal(handoff, origin + '/destination/5/qr');
-  await fallback.page.getByRole('button', { name: 'Copy QR page link' }).click();
-  await fallback.page.getByText('Press and hold the selected link', { exact: false }).waitFor();
-  assert.equal(await fallback.page.getByRole('textbox').evaluate(input => input.selectionEnd - input.selectionStart), handoff.length);
+  await fallback.page.getByRole('alert').waitFor();
+  assert.match(await fallback.page.getByRole('alert').innerText(), /Saving is unavailable here/);
+  assert.equal(await fallback.page.locator('.qr-save-preview, .qr-browser-help').count(), 0);
+  assert.equal(await fallback.page.getByRole('textbox', { name: 'QR page link' }).count(), 0);
   await fallback.page.getByRole('button', { name: 'Print QR', exact: true }).click();
-  await fallback.page.getByRole('heading', { name: 'Print your QR code', exact: true }).waitFor();
-  await fallback.page.screenshot({ path: '.sites-runtime/qa/messenger-qr-fallback.png', fullPage: true });
+  assert.match(await fallback.page.getByRole('alert').innerText(), /Printing is unavailable here/);
+  await fallback.page.screenshot({ path: '.sites-runtime/qa/messenger-qr-clean.png', fullPage: true });
   assert.equal(unwantedDownloads, 0, 'Do not rely on silently blocked in-app downloads');
 
   const external = await openPage();
-  await ready(external.page, new URL(handoff).pathname);
+  await ready(external.page, '/destination/5/qr');
   const externalDownload = external.page.waitForEvent('download');
   await external.page.getByRole('button', { name: 'Download QR', exact: true }).click();
   assert.match((await externalDownload).suggestedFilename(), /^sulyap-05-/);
@@ -123,7 +121,7 @@ try {
   await external.context.close();
   await fallback.context.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: unsupported Messenger save/print preview, clipboard fallback, same-destination browser handoff, invalid destination, and no runtime errors.');
+  console.log('PASS: unsupported save/print errors, direct QR page download, invalid destination, and no runtime errors.');
 } finally {
   await browser.close();
 }

@@ -204,13 +204,6 @@ dialog::backdrop { background: rgb(39 24 33 / 85%); backdrop-filter: blur(8px); 
 .lightbox-prev, .lightbox-next { background: rgb(74 53 64 / 88%); border: 1px solid rgb(248 220 229 / 40%); }
 .qr-tools > button:disabled { opacity: .55; cursor: wait; }
 .qr-action-status { margin-top: 12px; font-size: .8rem; }
-.qr-save-preview { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
-.qr-save-preview h4 { font-size: 1.1rem; }
-.qr-save-preview p { margin: 10px 0; font-size: .875rem; line-height: 1.6; }
-.qr-save-preview > img { display: block; width: 100%; max-width: 280px; height: auto; margin: 16px auto; user-select: auto; -webkit-touch-callout: default; }
-.qr-browser-help { text-align: left; }
-.qr-browser-help label { display: block; margin-top: 14px; font-size: .8rem; }
-.qr-browser-help input { display: block; width: 100%; min-width: 0; margin-top: 6px; padding: 10px; font: inherit; border: 1px solid var(--line); border-radius: 6px; }
 .qr-export-page { max-width: 560px; padding-top: 45px; padding-bottom: 70px; }
 .qr-export-page > h1 { margin: 24px 0; font-size: 2rem; }
 .qr-print-sheet { display: none; }
