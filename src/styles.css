@@ -469,3 +469,60 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
   .hero-collage-frame { transition: none; }
   .hero-collage-tile img { animation: none; }
 }
+
+/* Clearer, more tactile cues for the directory's interactive controls. */
+.establishments-toolbar {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(115deg, #fffdfc, #fff7f8);
+}
+.establishment-filters button {
+  box-shadow: 0 2px 8px rgb(74 53 64 / 3%);
+}
+.establishment-filters button:hover {
+  transform: translateY(-2px);
+  background: #fff9fb;
+  box-shadow: 0 7px 16px rgb(100 49 71 / 8%);
+}
+.establishment-filters button[aria-pressed="true"] {
+  box-shadow: 0 5px 14px rgb(173 69 104 / 18%);
+}
+.establishment-filters button[aria-pressed="true"] span {
+  background: rgb(255 255 255 / 94%);
+}
+.establishment-filters button:focus-visible,
+.establishment-actions a:focus-visible,
+.card-bottom a:focus-visible,
+.information-card:focus-visible {
+  outline-offset: 4px;
+}
+.establishment-card:focus-within,
+.destination-card:focus-within {
+  border-color: #dba0b6;
+  box-shadow: 0 12px 28px rgb(100 49 71 / 10%);
+}
+.establishment-photo-credit {
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.establishment-photo-credit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgb(0 0 0 / 14%);
+  text-decoration: none;
+}
+.qr-preview-button {
+  border-radius: 999px;
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.qr-preview-button:hover {
+  background: var(--action);
+  color: #fff;
+  box-shadow: 0 5px 14px rgb(173 69 104 / 15%);
+}
+@media (max-width: 720px) {
+  .establishments-toolbar { padding: 14px; border-radius: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .establishment-filters button:hover,
+  .establishment-photo-credit:hover { transform: none; }
+}
