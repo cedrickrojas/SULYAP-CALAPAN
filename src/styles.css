@@ -643,14 +643,15 @@ p { line-height: 1.75; }
 .navbar .nav-links a { font-size: .9375rem; padding: 12px 10px; letter-spacing: 0; line-height: 1.5; }
 .establishment-filters button { font-size: .875rem; font-weight: 500; }
 @media (max-width: 720px) {
+  .navbar .nav-links { display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 2px; }
+  .navbar .nav-links a { flex: 0 0 auto; font-size: clamp(.75rem, 3.45vw, .875rem); min-height: 44px; padding: 10px 3px; white-space: nowrap; letter-spacing: 0; }
   .establishment-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .establishment-filters button { min-height: 72px; grid-template-rows: minmax(32px, auto) 24px; font-size: .8125rem; padding: 10px 6px; line-height: 1.5; }
   .establishment-filters button:first-child { font-size: .875rem; min-height: 48px; }
   .lightbox-caption { height: 4.8em; }
 }
 @media (max-width: 480px) {
-  .navbar .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 8px; }
-  .navbar .nav-links a { font-size: .875rem; min-height: 44px; padding: 10px 6px; }
   .page-intro h1 { font-size: clamp(2rem, 9vw, 2.65rem); line-height: 1.2; }
 }
 @media (max-width: 380px) { .qr-dialog .qr-tools { flex-direction: column; } }
+@media (max-width: 360px) { .navbar .nav-links a { padding-inline: 1px; } }
