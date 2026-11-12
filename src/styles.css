@@ -611,6 +611,7 @@ p { line-height: 1.75; }
   font-size: 1rem; line-height: 1.75; color: var(--muted);
 }
 .detail-content .detail-prose { font-size: 1.0625rem; line-height: 1.85 !important; max-width: 68ch; }
+.home-hero-collage .hero-content > p:not(.eyebrow) { font-size: 1.125rem; line-height: 1.8; }
 .steps p { font-size: 1rem !important; }
 .small-copy { font-size: .9375rem !important; }
 .location-line, .information-card p, .establishment-details p,
