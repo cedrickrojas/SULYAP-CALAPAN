@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {QRModal} from './features';
 import {getDestination} from './destinations';
 
 const selections = [
@@ -12,7 +12,7 @@ const selections = [
 ];
 const landscapes = selections.map(({id, image, label, position}) => {
   const destination = getDestination(id);
-  return {...destination.images[image], href: destination.qrCodeUrl + '#information', label: label || destination.name, position: position || '50% 50%'};
+  return {...destination.images[image], destination, label: label || destination.name, position: position || '50% 50%'};
 });
 
 const culturePhotos = [
@@ -58,8 +58,9 @@ export default function HomeDestinationCollage() {
   const [preview, setPreview] = useState(null);
   const [interacting, setInteracting] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [qrDestination, setQrDestination] = useState(null);
   const figure = useRef(null);
-  const playing = !reducedMotion && visible && inView && !interacting && !focused && preview === null;
+  const playing = !reducedMotion && visible && inView && !interacting && !focused && preview === null && !qrDestination;
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -83,9 +84,9 @@ export default function HomeDestinationCollage() {
     return () => window.clearInterval(timer);
   }, [playing]);
 
-  return <figure ref={figure} className="hero-destination-collage" data-playing={playing} data-scene={step === 0 ? 'places' : 'culture'} aria-label="Calapan destinations and culture"
+  return <><figure ref={figure} className="hero-destination-collage" data-playing={playing} data-scene={step === 0 ? 'places' : 'culture'} aria-label="Calapan destinations and culture"
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
-    onFocusCapture={() => setFocused(true)} onBlurCapture={event => {if (!event.currentTarget.contains(event.relatedTarget)) {setFocused(false); setPreview(null);}}}
+    onFocusCapture={() => setFocused(true)} onBlurCapture={event => {if (!event.currentTarget.contains(event.relatedTarget)) {setFocused(false); if (!qrDestination) setPreview(null);}}}
     onKeyDown={event => {if (event.key === 'Escape') setPreview(null);}}>
     <div className="hero-collage-grid">
       {landscapes.map((_, index) => <div className={`hero-collage-tile${index === 0 ? ' hero-collage-featured' : ''}${preview === index ? ' is-previewing' : ''}`} key={index}>
@@ -96,10 +97,12 @@ export default function HomeDestinationCollage() {
             <span className="hero-collage-label" aria-hidden="true">{photo.label}</span>
           </span>;
         })}
-        <button type="button" className="collage-preview" aria-label={`Preview ${scenes[step][index].label}`} aria-expanded={preview === index} onClick={() => setPreview(current => current === index ? null : index)}/>
-        <Link className="collage-explore" to={scenes[step][index].href || '/destinations'} aria-label={`Explore ${scenes[step][index].label}`}>Explore <span aria-hidden="true">↗</span></Link>
+        {scenes[step][index].destination && <>
+          <button type="button" className="collage-preview" aria-label={`Preview ${scenes[step][index].label}`} aria-expanded={preview === index} onClick={() => setPreview(current => current === index ? null : index)}/>
+          <button type="button" className="collage-explore" aria-haspopup="dialog" aria-label={`Explore ${scenes[step][index].destination.name}: view QR code`} onClick={() => {setPreview(index); setQrDestination(scenes[step][index].destination);}}>Explore <span aria-hidden="true">↗</span></button>
+        </>}
       </div>)}
     </div>
     <figcaption><a href="/photo-credits.html">Photo credits <span aria-hidden="true">↗</span></a></figcaption>
-  </figure>;
+  </figure>{qrDestination && <QRModal destination={qrDestination} onClose={() => setQrDestination(null)}/>}</>;
 }

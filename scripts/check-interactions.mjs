@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdirSync} from 'node:fs';
 import {chromium, expect} from '@playwright/test';
 import {establishments} from '../src/establishments.js';
+import {getDestination} from '../src/destinations.js';
 
 const origin = process.argv[2] || 'http://127.0.0.1:5173';
 mkdirSync('.sites-runtime/qa', {recursive: true});
@@ -31,15 +32,33 @@ try {
   await expect(page.getByRole('group', {name: 'Collage scenes'})).toHaveCount(0);
   const tile = page.locator('.hero-collage-tile').first();
   await tile.hover();
-  await expect(tile.getByRole('link')).toBeVisible();
+  await expect(tile.locator('.collage-explore')).toBeVisible();
   await expect(page.locator('.hero-destination-collage')).toHaveAttribute('data-playing', 'false');
-  await tile.getByRole('button').focus();
+  await tile.locator('.collage-preview').focus();
   await page.keyboard.press('Enter');
-  await expect(tile.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+  await expect(tile.locator('.collage-preview')).toHaveAttribute('aria-expanded', 'true');
   await page.screenshot({path: '.sites-runtime/qa/interactions-home-desktop.png', fullPage: true});
-  await tile.getByRole('link').click();
-  await expect(page).toHaveURL(/\/destination\/9#information$/);
-  await expect(page.locator('.information-card')).toHaveCount(7);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', {name: 'QR code for Baco Islands', exact: true})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(tile.locator('.collage-explore')).toBeFocused();
+  for (const [index, id] of ['9', '1', '2', '3', '8', '10'].entries()) {
+    const destination = getDestination(id);
+    const currentTile = page.locator('.hero-collage-tile').nth(index);
+    await currentTile.hover();
+    await currentTile.locator('.collage-explore').click();
+    const qrDialog = page.getByRole('dialog', {name: `QR code for ${destination.name}`, exact: true});
+    await expect(qrDialog).toBeVisible();
+    await expect(qrDialog.locator('h3')).toHaveText(destination.name);
+    await expect(qrDialog.locator('.qr-image')).toBeVisible();
+    await expect(page.locator('.hero-destination-collage')).toHaveAttribute('data-playing', 'false');
+    await qrDialog.getByRole('button', {name: 'Copy link', exact: true}).click();
+    assert.ok((await page.evaluate(() => navigator.clipboard.readText())).endsWith(`/destination/${id}#information`));
+    await expect(page).toHaveURL(origin + '/');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.qr-dialog[open]')).toHaveCount(0);
+  }
 
   // Check the page fade while navigating without a reload.
   await page.evaluate(() => {
@@ -134,6 +153,9 @@ try {
   await page.setViewportSize({width: 320, height: 844});
   await page.locator('.collage-preview').first().click();
   await expect(page.locator('.collage-explore').first()).toBeVisible();
+  await page.locator('.collage-explore').first().click();
+  await expect(page.getByRole('dialog', {name: 'QR code for Baco Islands', exact: true})).toBeVisible();
+  await page.keyboard.press('Escape');
   await noOverflow();
   const mobile = await browser.newContext({hasTouch: true, isMobile: true, viewport: {width: 390, height: 844}});
   const touchPage = await mobile.newPage();
@@ -192,7 +214,7 @@ try {
   await expect(touchPage.locator('.lightbox[open]')).toHaveCount(0);
   await mobile.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: collage preview/navigation, page fade, category filtering/history/resizing, gallery drag/touch/keys/indicators, copy success/failure, steady QR, mobile layout, and reduced motion.');
+  console.log('PASS: six matching collage QR popups and keyboard/mobile controls, page fade, category filtering/history/resizing, gallery drag/touch/keys/indicators, copy success/failure, steady QR, mobile layout, and reduced motion.');
 } finally {
   await browser.close();
 }

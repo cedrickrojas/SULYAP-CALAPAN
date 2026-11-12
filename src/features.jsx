@@ -38,4 +38,11 @@ export function QRCodeCard({destination:d,compact=false}){
   <p className="scan-label">Scan to Explore</p><QRActions key={d.id} destination={d} qr={qr}/>
  </article>;
 }
-export function QRModal({destination:d,onClose}){const ref=useRef(null);useEffect(()=>{const node=ref.current;node.showModal();return()=>node.close();},[]);return <dialog ref={ref} className="qr-dialog" aria-label={`QR code for ${d.name}`} onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}><button className="icon-button modal-close" aria-label="Close QR code" onClick={onClose}><X/></button><QRCodeCard destination={d} compact/></dialog>;}
+export function QRModal({destination:d,onClose}){
+ const ref=useRef(null);
+ useEffect(()=>{const node=ref.current;node.showModal();return()=>node.close();},[]);
+ const close=()=>{ref.current?.close();onClose();};
+ return <dialog ref={ref} className="qr-dialog" aria-label={`QR code for ${d.name}`} onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}}>
+  <button className="icon-button modal-close" aria-label="Close QR code" onClick={close}><X/></button><QRCodeCard destination={d} compact/>
+ </dialog>;
+}
