@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import {Link} from 'react-router-dom';
 import {getDestination} from './destinations';
 
 const selections = [
@@ -11,7 +12,7 @@ const selections = [
 ];
 const landscapes = selections.map(({id, image, label, position}) => {
   const destination = getDestination(id);
-  return {...destination.images[image], label: label || destination.name, position: position || '50% 50%'};
+  return {...destination.images[image], href: destination.qrCodeUrl + '#information', label: label || destination.name, position: position || '50% 50%'};
 });
 
 const culturePhotos = [
@@ -54,8 +55,11 @@ export default function HomeDestinationCollage() {
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [visible, setVisible] = useState(!document.hidden);
   const [inView, setInView] = useState(true);
+  const [preview, setPreview] = useState(null);
+  const [interacting, setInteracting] = useState(false);
+  const [focused, setFocused] = useState(false);
   const figure = useRef(null);
-  const playing = !reducedMotion && visible && inView;
+  const playing = !reducedMotion && visible && inView && !interacting && !focused && preview === null;
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -79,9 +83,12 @@ export default function HomeDestinationCollage() {
     return () => window.clearInterval(timer);
   }, [playing]);
 
-  return <figure ref={figure} className="hero-destination-collage" data-playing={playing} data-scene={step === 0 ? 'places' : 'culture'} aria-label="Calapan destinations, Mangyan smiles and handicrafts, Kalap Festival and Pandang Gitab dancers">
+  return <figure ref={figure} className="hero-destination-collage" data-playing={playing} data-scene={step === 0 ? 'places' : 'culture'} aria-label="Calapan destinations and culture"
+    onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
+    onFocusCapture={() => setFocused(true)} onBlurCapture={event => {if (!event.currentTarget.contains(event.relatedTarget)) {setFocused(false); setPreview(null);}}}
+    onKeyDown={event => {if (event.key === 'Escape') setPreview(null);}}>
     <div className="hero-collage-grid">
-      {landscapes.map((_, index) => <div className={`hero-collage-tile${index === 0 ? ' hero-collage-featured' : ''}`} key={index}>
+      {landscapes.map((_, index) => <div className={`hero-collage-tile${index === 0 ? ' hero-collage-featured' : ''}${preview === index ? ' is-previewing' : ''}`} key={index}>
         {scenes.map((scene, frame) => {
           const photo = scene[index];
           return <span key={frame} className={`hero-collage-frame${step === frame ? ' is-active' : ''}`} aria-hidden={step !== frame}>
@@ -89,6 +96,8 @@ export default function HomeDestinationCollage() {
             <span className="hero-collage-label" aria-hidden="true">{photo.label}</span>
           </span>;
         })}
+        <button type="button" className="collage-preview" aria-label={`Preview ${scenes[step][index].label}`} aria-expanded={preview === index} onClick={() => setPreview(current => current === index ? null : index)}/>
+        <Link className="collage-explore" to={scenes[step][index].href || '/destinations'} aria-label={`Explore ${scenes[step][index].label}`}>Explore <span aria-hidden="true">↗</span></Link>
       </div>)}
     </div>
     <figcaption><a href="/photo-credits.html">Photo credits <span aria-hidden="true">↗</span></a></figcaption>

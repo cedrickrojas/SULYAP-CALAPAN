@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {MapPin, Phone, Utensils, Wine, ShoppingBag, Gift, Hotel, Plane, ExternalLink} from 'lucide-react';
 import {establishments} from './establishments.js';
@@ -27,6 +27,21 @@ export default function Establishments() {
   const [params, setParams] = useSearchParams();
   const selected = categories.some(([key]) => key === params.get('type')) ? params.get('type') : 'all';
   const visible = establishments.filter(place => selected === 'all' || place.category === selected);
+  const filters = useRef(null);
+  const [highlight, setHighlight] = useState(null);
+
+  useLayoutEffect(() => {
+    const group = filters.current;
+    const update = () => {
+      const button = group.querySelector('[aria-pressed="true"]');
+      setHighlight({left: button.offsetLeft, top: button.offsetTop, width: button.offsetWidth, height: button.offsetHeight});
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(group);
+    group.querySelectorAll('button').forEach(button => observer.observe(button));
+    return () => observer.disconnect();
+  }, [selected]);
 
   return <>
     <section className="page-intro container">
@@ -36,12 +51,13 @@ export default function Establishments() {
     </section>
     <section className="container establishments-section" aria-label="Calapan establishments directory">
       <div className="establishments-toolbar">
-        <div className="establishment-filters" role="group" aria-label="Filter establishments">
+        <div ref={filters} className="establishment-filters" role="group" aria-label="Filter establishments">
+          {highlight && <span className="filter-highlight" aria-hidden="true" style={highlight}/>}
           {categories.map(([key, label]) => <button key={key} type="button" aria-pressed={selected === key} onClick={() => setParams(key === 'all' ? {} : {type: key})}>{label}<span>{establishments.filter(place => key === 'all' || place.category === key).length}</span></button>)}
         </div>
         <p className="establishments-count" role="status">{visible.length} establishments</p>
       </div>
-      <div className="establishment-grid">
+      <div className="establishment-grid filter-results" key={selected}>
         {visible.map(place => {
           const Icon = categoryIcons[place.category] || ShoppingBag;
           const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.address}`)}`;

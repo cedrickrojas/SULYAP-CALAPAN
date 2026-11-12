@@ -16,6 +16,16 @@ export default function MotionEnhancements() {
   const revealed = useRef(new WeakSet());
 
   useEffect(() => {
+    const main = document.getElementById('main-content');
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (preference.matches || !main?.animate) return;
+    const animation = main.animate([{opacity: .35}, {opacity: 1}], {duration: 240, easing: 'ease-out'});
+    const cancel = () => animation.cancel();
+    preference.addEventListener('change', cancel);
+    return () => {cancel(); preference.removeEventListener('change', cancel);};
+  }, [pathname]);
+
+  useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let dispose = () => {};
 

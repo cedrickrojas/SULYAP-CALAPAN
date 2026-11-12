@@ -519,6 +519,62 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
   color: #fff;
   box-shadow: 0 5px 14px rgb(173 69 104 / 15%);
 }
+
+/* Interactive collage: the first tap previews; Explore opens the guide. */
+.hero-collage-tile { transition: transform .3s ease, box-shadow .3s ease; }
+.collage-preview { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; padding: 0; border-radius: inherit; background: transparent; cursor: pointer; }
+.collage-preview:focus-visible { outline: 3px solid white; outline-offset: -5px; }
+.collage-explore { position: absolute; z-index: 3; top: 9px; right: 9px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 36px; padding: 7px 10px; border-radius: 999px; background: #fff9f7; color: var(--action); font-size: .6875rem; font-weight: 700; opacity: 0; visibility: hidden; translate: 0 5px; transition: opacity .2s, translate .2s, visibility .2s; }
+.hero-collage-tile:is(.is-previewing, :focus-within) .collage-explore { opacity: 1; visibility: visible; translate: 0 0; }
+.hero-collage-tile.is-previewing { transform: scale(1.025); z-index: 2; box-shadow: 0 12px 28px rgb(74 53 64 / 20%); }
+@media (hover: hover) and (pointer: fine) {
+  .hero-collage-tile:hover { transform: scale(1.025); z-index: 2; box-shadow: 0 12px 28px rgb(74 53 64 / 20%); }
+  .hero-collage-tile:hover .collage-explore { opacity: 1; visibility: visible; translate: 0 0; }
+}
+
+/* A single highlight travels between wrapped filter buttons. */
+.establishment-filters { position: relative; isolation: isolate; }
+.establishment-filters .filter-highlight { position: absolute; z-index: -1; border-radius: 999px; background: var(--action); box-shadow: 0 5px 14px rgb(173 69 104 / 18%); pointer-events: none; transition: left .3s cubic-bezier(.22, 1, .36, 1), top .3s cubic-bezier(.22, 1, .36, 1), width .3s ease, height .3s ease; }
+.establishment-filters button[aria-pressed="true"], .establishment-filters button[aria-pressed="true"]:hover { background: transparent; box-shadow: none; }
+.establishment-filters button:hover { transform: none; }
+.filter-results { animation: sulyap-filter-results .3s ease-out; }
+@keyframes sulyap-filter-results { from { opacity: .15; } to { opacity: 1; } }
+
+/* Direction-aware photo changes and direct photo selection. */
+.lightbox-main { touch-action: pan-y pinch-zoom; user-select: none; cursor: grab; }
+.lightbox-main.is-dragging { cursor: grabbing; }
+.lightbox-main > img { max-height: 62dvh; transition: transform .15s ease-out; }
+.lightbox-main.is-dragging > img { transition: none; }
+.lightbox-prev, .lightbox-next { top: 50%; bottom: auto; translate: 0 -50%; transform: none; z-index: 3; }
+@keyframes sulyap-photo { from { opacity: 0; translate: var(--photo-enter-x, 48px) 0; } to { opacity: 1; translate: 0 0; } }
+.lightbox-caption { gap: 16px; font-size: .8125rem; margin: 16px auto 0; padding-inline: 8px; }
+.lightbox-caption > span { flex-shrink: 0; }
+.gallery-indicators { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; margin-top: 8px; }
+.gallery-indicators button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 0; border-radius: 999px; background: transparent; }
+.gallery-indicators button > span { display: block; width: 7px; height: 7px; border-radius: 999px; background: #ffffff70; transition: width .25s ease, background .25s ease; }
+.gallery-indicators button[aria-pressed="true"] > span { width: 24px; background: #f5bfd2; }
+.gallery-hint { text-align: center; font-size: .6875rem; color: #f8dce5; margin: 0 0 6px; }
+
+/* Press and completion feedback do not animate the QR image. */
+.icon-button, .gallery-thumb, .collage-preview { transition: scale .15s ease, background .2s ease; }
+.icon-button:active, .gallery-thumb:active, .collage-preview:active { scale: .96; }
+.button:disabled, .qr-tools > button:disabled { transform: none; scale: 1; }
+.qr-tools { flex-wrap: wrap; }
+.qr-tools .copy-link-button { flex-basis: 100%; }
+.qr-tools .copy-link-button.is-copied { color: #35684a; background: #eaf4ed; border-color: #a7cbb2; }
+.copy-link-button.is-copied svg { animation: sulyap-check .25s ease-out; }
+@keyframes sulyap-check { from { opacity: 0; scale: .6; } to { opacity: 1; scale: 1; } }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 720px) {
+  .lightbox-main > img { max-height: 52dvh; }
+  .establishment-filters .filter-highlight { border-radius: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-collage-tile:hover, .hero-collage-tile.is-previewing { transform: none; }
+  .collage-explore { translate: none; }
+  .lightbox-main > img { transform: none !important; }
+  .icon-button:active, .gallery-thumb:active, .collage-preview:active { scale: 1; }
+}
 @media (max-width: 720px) {
   .establishments-toolbar { padding: 14px; border-radius: 18px; }
 }
