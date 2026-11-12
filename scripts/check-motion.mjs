@@ -1,3 +1,4 @@
+import {getDestination} from '../src/destinations.js';
 import assert from 'node:assert/strict';
 import {chromium, expect} from '@playwright/test';
 import {mkdirSync} from 'node:fs';
@@ -106,7 +107,7 @@ try {
   await page.locator('.gallery-thumb').first().click();
   await expect(page.locator('.lightbox[open]')).toBeVisible();
   await page.getByRole('button', {name: 'Next photo'}).click();
-  await expect(page.locator('.lightbox-caption')).toContainText('2 / 3');
+  await expect(page.locator('.lightbox-caption')).toContainText(`2 / ${getDestination('1').images.length}`);
   await expect(page.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
   await expect(page.locator('.gallery-slide.is-current img')).toBeVisible();
   await page.keyboard.press('Escape');

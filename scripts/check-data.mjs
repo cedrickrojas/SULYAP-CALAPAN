@@ -5,14 +5,18 @@ const fields=['id','name','slug','description','background','address','latitude'
 assert.equal(destinations.length,10);
 assert.equal(new Set(destinations.map(d=>d.id)).size,10);
 assert.equal(new Set(destinations.map(d=>d.slug)).size,10);
+const credits=JSON.parse(readFileSync('scripts/calapan-photo-assets.json','utf8'));
+const creditedFiles=new Set(credits.map(photo=>'/images/'+photo.file));
 for(const d of destinations){
  for(const field of fields)assert.ok(d[field]!==undefined, d.name+' missing '+field);
  if(d.latitude===null||d.longitude===null){assert.equal(d.latitude,null);assert.equal(d.longitude,null);assert.ok(d.mapNote.includes('awaiting verification'));}
  else{assert.ok(Number.isFinite(d.latitude)&&d.latitude>=-90&&d.latitude<=90);assert.ok(Number.isFinite(d.longitude)&&d.longitude>=-180&&d.longitude<=180);}
  assert.equal(d.qrCodeUrl,'/destination/'+d.id);assert.equal(getDestination(String(d.id)),d);assert.equal(getDestination(d.slug),d);
- assert.equal(d.images.length,3);
+ assert.ok(d.images.length>=4,d.name+' needs at least four gallery views');
+ assert.equal(new Set(d.images.map(image=>image.src)).size,d.images.length,d.name+' has duplicate gallery paths');
+ for(const image of d.images)assert.ok(creditedFiles.has(image.src),'Missing attribution for '+image.src);
  for(const image of d.images){assert.ok(existsSync('public'+image.src),'Missing '+image.src);if(image.placeholder){assert.ok(image.src.endsWith('.svg'));assert.ok(readFileSync('public'+image.src,'utf8').includes('PHOTO COMING SOON'));}else{assert.ok(statSync('public'+image.src).size>10000);}}
 }
 assert.deepEqual(destinations.map(d=>d.name),['Sto. Niño Cathedral','Silonay Mangrove Conservation Eco-Park','Oriental Mindoro Heritage Museum','Calapan Zoological and Recreational Park','Plaza del Gobernador','Calapan City Plaza','Anaganahao Island','Caluangan Lake','Baco Islands','Suqui Beach']);
 assert.ok(destinations.every(d=>d.municipality==='Calapan City'&&d.province==='Oriental Mindoro'));
-console.log('PASS: the ten client-selected destinations in order, stable routes, valid map data, and thirty photos or explicitly labelled placeholders.');
+console.log(`PASS: ten destinations, stable routes, valid map data, and ${destinations.reduce((total,d)=>total+d.images.length,0)} attributed gallery views.`);

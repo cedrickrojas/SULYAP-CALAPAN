@@ -30,7 +30,7 @@ for(const d of destinations){
  assert.equal(await page.locator('.information-card').count(),7);
  assert.deepEqual(await page.locator('.information-card h3').allTextContents(),expectedSections.map(([,title])=>title));
  const images=await page.locator('.gallery-thumb img').evaluateAll(imgs=>imgs.map(img=>img.src));
- assert.equal(images.length,3);assert.equal(new Set(images).size,3);
+ assert.equal(images.length,d.images.length);assert.equal(new Set(images).size,d.images.length);
  await noOverflow();
  for(const [section,title] of expectedSections){
   await openPage(page,origin+d.qrCodeUrl+'/'+section);assert.equal(await page.locator('h1').innerText(),title);
@@ -52,7 +52,7 @@ for(const d of destinations){
   if(section==='thingsToDo')for(const item of [...d.thingsToDo,...d.attractions])assert.ok(text.includes(item));
   if(section==='rules')for(const item of [...d.precautionaryMeasures,...d.rules,...d.travelTips,...Object.values(d.visitorPlanning)])assert.ok(text.includes(item));
   if(section==='images'){
-   assert.equal(await page.locator('.detail-gallery .gallery-thumb').count(),3);
+   assert.equal(await page.locator('.detail-gallery .gallery-thumb').count(),d.images.length);
    await page.locator('.gallery-thumb').first().click();await page.locator('dialog.lightbox[open]').waitFor();await page.keyboard.press('Escape');
   }
   if(section==='directions'&&d.directionsQuery){assert.ok((await page.getByRole('link',{name:'Find Tourism Office'}).getAttribute('href')).includes(encodeURIComponent(d.directionsQuery)));}
@@ -64,7 +64,7 @@ for(const [oldSection,newSection] of Object.entries({location:'directions',entra
 }
 console.log('PASS: old section links redirect to their combined pages.');
 await openPage(page,origin+"/destination/"+destinations[0].slug);assert.equal(await page.locator('h1').innerText(),destinations[0].name);
-await page.locator('.gallery-thumb').first().click();await page.locator('dialog.lightbox[open]').waitFor();await page.getByRole('button',{name:'Next photo'}).click();assert.ok((await page.locator('.lightbox-caption').innerText()).includes('2 / 3'));await page.keyboard.press('ArrowLeft');assert.ok((await page.locator('.lightbox-caption').innerText()).includes('1 / 3'));await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0);
+await page.locator('.gallery-thumb').first().click();await page.locator('dialog.lightbox[open]').waitFor();await page.getByRole('button',{name:'Next photo'}).click();assert.ok((await page.locator('.lightbox-caption').innerText()).includes(`2 / ${destinations[0].images.length}`));await page.keyboard.press('ArrowLeft');assert.ok((await page.locator('.lightbox-caption').innerText()).includes(`1 / ${destinations[0].images.length}`));await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0);
 await openPage(page,origin+'/destinations');assert.equal(await page.locator('.destination-card').count(),10);await page.getByRole('button',{name:"View QR code for "+destinations[0].name}).click();await page.locator('.qr-dialog[open]').waitFor();await page.getByRole('button',{name:'Close QR code'}).click();assert.equal(await page.locator('dialog[open]').count(),0);
 await openPage(page,origin+'/qr-directory');await page.waitForURL('**/destinations');
 assert.equal(await page.locator('a[href="/qr-directory"]').count(),0);
@@ -114,7 +114,7 @@ for(const d of destinations){
  await page.getByRole('link',{name:'View Destination Images',exact:true}).click();
  await page.waitForURL('**/images');
  await page.locator('.detail-gallery').waitFor();
- assert.equal(await page.locator('.gallery-thumb').count(),3);await noOverflow();
+ assert.equal(await page.locator('.gallery-thumb').count(),d.images.length);await noOverflow();
 }
 await openPage(page,origin+'/destination/7/rules');await page.screenshot({path:'.sites-runtime/qa/precautions-mobile.png',fullPage:true});
 await openPage(page,origin+'/destination/3/contactInformation');await page.screenshot({path:'.sites-runtime/qa/contacts-mobile.png',fullPage:true});

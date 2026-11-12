@@ -37,6 +37,7 @@ PHOTOS = [
 ]
 PORTAL_PHOTOS = json.loads((ROOT / 'scripts/calapan-portal-photo-sources.json').read_text(encoding='utf-8'))
 WEB_PHOTOS = json.loads((ROOT / 'scripts/calapan-web-photo-sources.json').read_text(encoding='utf-8'))
+GALLERY_ADDITIONS = json.loads((ROOT / 'scripts/calapan-gallery-additions.json').read_text(encoding='utf-8'))
 DETAIL_VIEWS = [
     ('aganhao-islet', 2, 'Shoreline detail (crop of the same aerial photograph)', (120, 300, 900, 600)),
     ('aganhao-islet', 3, 'Island greenery detail (crop of the same aerial photograph)', (750, 200, 1020, 680)),
@@ -44,6 +45,7 @@ DETAIL_VIEWS = [
 
 
 def fetch(url):
+    url = urllib.parse.quote(url, safe=':/?&=%#')
     request = urllib.request.Request(url, headers={'User-Agent': 'SulyapTourismGuide/1.0 (academic project; image attribution included)'})
     with urllib.request.urlopen(request, timeout=25) as response:
         return response.read()
@@ -105,7 +107,12 @@ def prepare_web_photo(item):
         target.parent.mkdir(parents=True, exist_ok=True)
         image.save(target, 'JPEG', quality=86, optimize=True)
         record = {key: item[key] for key in ('title', 'author', 'source', 'url', 'note')}
-        record.update({'file': filename, 'sourceType': 'published-source', 'license': 'Not stated on source page', 'licenseUrl': ''})
+        record.update({'file': filename, 'sourceType': item.get('sourceType', 'published-source'),
+                       'license': item.get('license', 'Not stated on source page'), 'licenseUrl': item.get('licenseUrl', '')})
+        if item.get('context'):
+            record['context'] = item['context']
+        if item.get('alt'):
+            record['alt'] = item['alt']
         print('SOURCE PHOTO READY: ' + filename, flush=True)
         return slug, number, record
     except Exception as error:
@@ -183,6 +190,8 @@ def main():
     with ThreadPoolExecutor(max_workers=2) as pool:
         if '--local-only' in sys.argv:
             results = []
+        elif '--additions-only' in sys.argv:
+            results = list(pool.map(prepare_web_photo, GALLERY_ADDITIONS))
         elif '--web-only' in sys.argv:
             results = list(pool.map(prepare_photo, [item for item in PHOTOS if item[0] in ('aganhao-islet', 'caluangan-lake', 'suqui-beach')]))
             results += list(pool.map(prepare_web_photo, WEB_PHOTOS))
@@ -191,15 +200,22 @@ def main():
             results += list(pool.map(prepare_portal_photo, PORTAL_PHOTOS))
             if '--portal-only' not in sys.argv:
                 results += list(pool.map(prepare_web_photo, WEB_PHOTOS))
+        if '--local-only' not in sys.argv and '--additions-only' not in sys.argv:
+            additions = [photo for photo in GALLERY_ADDITIONS if '--portal-only' not in sys.argv or photo.get('sourceType') == 'tourism-portal']
+            results += list(pool.map(prepare_web_photo, additions))
     ready.update({(slug, number): photo for slug, number, photo in results if photo})
     prepare_detail_views(ready)
     images, credits = {}, []
     for slug, name in NAMES:
         images[slug] = []
-        for number in range(1, 4):
+        numbers = sorted({1, 2, 3} | {number for photo_slug, number in ready if photo_slug == slug})
+        for number in numbers:
             photo = ready.get((slug, number))
             if photo:
-                images[slug].append({'src': '/images/' + photo['file'], 'alt': f'{name} — {photo["title"].rsplit(".", 1)[0]}', 'placeholder': False})
+                image = {'src': '/images/' + photo['file'], 'alt': photo.get('alt', f'{name} — {photo["title"].rsplit(".", 1)[0]}'), 'placeholder': False}
+                if photo.get('context'):
+                    image['context'] = photo['context']
+                images[slug].append(image)
                 credits.append(photo)
             else:
                 images[slug].append(placeholder(slug, name, number))
@@ -207,7 +223,8 @@ def main():
     (ROOT / 'scripts/calapan-photo-assets.json').write_text(json.dumps(credits, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     write_credits(credits)
     detail_count = sum('derivedFrom' in photo for photo in credits)
-    print(f'PREPARED: {len(credits) - detail_count} attributed photographs, {detail_count} labelled detail views, and {30 - len(credits)} placeholders.', flush=True)
+    total = sum(len(gallery) for gallery in images.values())
+    print(f'PREPARED: {len(credits) - detail_count} attributed photographs, {detail_count} labelled detail views, and {total - len(credits)} placeholders across {total} gallery entries.', flush=True)
 
 
 def write_credits(credits):
@@ -236,7 +253,17 @@ def write_credits(credits):
                      '</a> · <a href="' + escape(photo['source']) + '">Original on Wikimedia Commons</a>' +
                      ' · <a href="/images/' + escape(photo['file']) + '">Processed photo</a>.' +
                      ' Resized and compressed for the web; display crops vary. The processed image retains the stated license.</li>')
-    body = '<body><a href="/">Back to Sulyap</a><h1>Photo credits</h1><p>Calapan destination photographs come from Wikimedia Commons, the client-supplied Travel Oriental Mindoro portal, Calapan community mapping, UPLB, Mindoro Travel Guide, and Philippine Information Agency MIMAROPA. Individual source and license details are listed below. They may show earlier appearances of the sites; the Baco gallery shows the island group, and the Suqui gallery includes the Donnyland beachfront and private resort frontage.</p><p>The Anaganahao gallery uses one verified aerial photograph and two clearly labelled detail crops of that same image. The shoreline and greenery details are not separate photographs. All thirty gallery slots now display destination imagery.</p><ol>' + ''.join(items) + '</ol></body></html>'
+    detail_count = sum('derivedFrom' in photo for photo in credits)
+    body = ('<body><a href="/">Back to Sulyap</a><h1>Photo credits</h1>'
+            '<p>Destination photographs come from Wikimedia Commons, Travel Oriental Mindoro, community mapping, '
+            'regional tourism sources, local government reports, and the original publishers listed below. '
+            'Source links, photographers where identified, and stated licenses are preserved. '
+            'Photographs may show earlier appearances; the Suqui gallery includes private resort frontage and a watermarked archival shoreline view.</p>'
+            f'<p>There are {len(credits)} gallery views: {len(credits) - detail_count} sourced photographs and {detail_count} labelled detail crops. '
+            'Anaganahao has one aerial photograph, two detail crops of that same image, and two regional Calapan reef photographs from Dive Mindoro. '
+            'Dive Mindoro does not identify a specific island for those reef photographs; they are labelled regional views.</p><ol>'
+            + ''.join(items) + '</ol></body></html>')
+
     establishment_sources = ROOT / 'scripts/establishment-photo-assets.json'
     if establishment_sources.exists():
         establishment_items = []

@@ -14,6 +14,16 @@
       "src": "/images/sto-nino-cathedral-3.jpg",
       "alt": "Sto. Niño Cathedral — Calapan Church historical marker",
       "placeholder": false
+    },
+    {
+      "src": "/images/sto-nino-cathedral-4.jpg",
+      "alt": "Sto. Niño Cathedral — Calapan Church Side View",
+      "placeholder": false
+    },
+    {
+      "src": "/images/sto-nino-cathedral-5.jpg",
+      "alt": "Sto. Niño Cathedral — Santo Niño Cathedral (Calapan) facade",
+      "placeholder": false
     }
   ],
   "silonay-mangrove-conservation-eco-park": [
@@ -30,6 +40,11 @@
     {
       "src": "/images/silonay-mangrove-conservation-eco-park-3.jpg",
       "alt": "Silonay Mangrove Conservation Eco-Park — Silonay mangrove forest, aerial view",
+      "placeholder": false
+    },
+    {
+      "src": "/images/silonay-mangrove-conservation-eco-park-4.jpg",
+      "alt": "Silonay Mangrove Conservation Eco-Park — Silonay mangrove boardwalk entrance and kayaks",
       "placeholder": false
     }
   ],
@@ -48,6 +63,16 @@
       "src": "/images/oriental-mindoro-heritage-museum-3.jpg",
       "alt": "Oriental Mindoro Heritage Museum — Oriental Mindoro Heritage Museum at dusk",
       "placeholder": false
+    },
+    {
+      "src": "/images/oriental-mindoro-heritage-museum-4.jpg",
+      "alt": "Oriental Mindoro Heritage Museum — Pottery and archaeological exhibits",
+      "placeholder": false
+    },
+    {
+      "src": "/images/oriental-mindoro-heritage-museum-5.jpg",
+      "alt": "Oriental Mindoro Heritage Museum — Mangyan cultural displays",
+      "placeholder": false
     }
   ],
   "calapan-zoological-and-recreational-park": [
@@ -64,6 +89,16 @@
     {
       "src": "/images/calapan-zoological-and-recreational-park-3.jpg",
       "alt": "Calapan Zoological and Recreational Park — Calapan Nature Park sculptures and recreational grounds",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-zoological-and-recreational-park-4.jpg",
+      "alt": "Calapan Zoological and Recreational Park — Mini-zoo bird enclosure, community mapping photograph",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-zoological-and-recreational-park-5.jpg",
+      "alt": "Calapan Zoological and Recreational Park — Mini-zoo pony, community mapping photograph",
       "placeholder": false
     }
   ],
@@ -82,6 +117,16 @@
       "src": "/images/plaza-del-gobernador-3.jpg",
       "alt": "Plaza del Gobernador — Plaza del Gobernador gallery photograph",
       "placeholder": false
+    },
+    {
+      "src": "/images/plaza-del-gobernador-4.jpg",
+      "alt": "Plaza del Gobernador — Arturo A",
+      "placeholder": false
+    },
+    {
+      "src": "/images/plaza-del-gobernador-5.jpg",
+      "alt": "Plaza del Gobernador — Plaza del Gobernador fountain show - Edgar Allan M",
+      "placeholder": false
     }
   ],
   "calapan-city-plaza": [
@@ -98,6 +143,16 @@
     {
       "src": "/images/calapan-city-plaza-3.jpg",
       "alt": "Calapan City Plaza — Mindoro Relief Map at Calapan Plaza",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-city-plaza-4.jpg",
+      "alt": "Calapan City Plaza — Rizal Monument at Calapan Plaza",
+      "placeholder": false
+    },
+    {
+      "src": "/images/calapan-city-plaza-5.jpg",
+      "alt": "Calapan City Plaza — Macario Adriatico Monument at Calapan Plaza",
       "placeholder": false
     }
   ],
@@ -116,6 +171,18 @@
       "src": "/images/aganhao-islet-3-detail.svg",
       "alt": "Anaganahao Island — Island greenery detail (crop of the same aerial photograph)",
       "placeholder": false
+    },
+    {
+      "src": "/images/aganhao-islet-4.jpg",
+      "alt": "Fish in the Calapan islands regional reef collection - Avic Maramot. Dive Mindoro does not identify a specific island for this photograph.",
+      "placeholder": false,
+      "context": "regional"
+    },
+    {
+      "src": "/images/aganhao-islet-5.jpg",
+      "alt": "Diver and coral reef in the Calapan islands regional collection - Penn DL Santos. Dive Mindoro does not identify a specific island for this photograph.",
+      "placeholder": false,
+      "context": "regional"
     }
   ],
   "caluangan-lake": [
@@ -132,6 +199,11 @@
     {
       "src": "/images/caluangan-lake-3.jpg",
       "alt": "Caluangan Lake — Caluangan Lake floating cottage inauguration (2022)",
+      "placeholder": false
+    },
+    {
+      "src": "/images/caluangan-lake-4.jpg",
+      "alt": "Caluangan Lake — Educational boat trip on Caluangan Lake (October 2026)",
       "placeholder": false
     }
   ],
@@ -150,6 +222,16 @@
       "src": "/images/baco-island-3.jpg",
       "alt": "Baco Islands — Baco island group - Pulong Gitna (Baco Medio), aerial view",
       "placeholder": false
+    },
+    {
+      "src": "/images/baco-island-4.jpg",
+      "alt": "Baco Islands — Baco-Chico islets in Calapan",
+      "placeholder": false
+    },
+    {
+      "src": "/images/baco-island-5.jpg",
+      "alt": "Baco Islands — Pulong Maliit (Baco Chico), aerial view",
+      "placeholder": false
     }
   ],
   "suqui-beach": [
@@ -166,6 +248,11 @@
     {
       "src": "/images/suqui-beach-3.jpg",
       "alt": "Suqui Beach — Donnyland resort frontage in Barangay Suqui",
+      "placeholder": false
+    },
+    {
+      "src": "/images/suqui-beach-4.jpg",
+      "alt": "Suqui Beach — Suqui Beach shoreline, archival travel-blog photograph (2016)",
       "placeholder": false
     }
   ]
