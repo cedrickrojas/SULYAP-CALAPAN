@@ -74,15 +74,16 @@ try {
   await expect(page.locator('.lightbox-caption')).toContainText('1 / 3');
   await page.getByRole('button', {name: 'Show photo 3', exact: true}).click();
   await expect(page.getByRole('button', {name: 'Show photo 3', exact: true})).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.lightbox-main > img')).toHaveCSS('opacity', '1');
+  await expect(page.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
   // A real pointer drag wraps from the last image to the first.
-  const bounds = await page.locator('.lightbox-main > img').boundingBox();
+  const bounds = await page.locator('.gallery-slide.is-current img').boundingBox();
   const x = bounds.x + bounds.width * .5, y = bounds.y + bounds.height * .5;
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.move(x - 90, y, {steps: 8});
   await page.mouse.up();
   await expect(page.locator('.lightbox-caption')).toContainText('1 / 3');
+  await expect(page.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
   await page.screenshot({path: '.sites-runtime/qa/interactions-gallery-mobile.png'});
   await page.keyboard.press('Escape');
   await expect(page.locator('.lightbox[open]')).toHaveCount(0);
@@ -139,13 +140,23 @@ try {
   touchPage.on('pageerror', error => errors.push(error.message));
   await touchPage.goto(origin + '/destination/1/images');
   await touchPage.locator('.gallery-thumb').first().tap();
+  await expect(touchPage.locator('.lightbox[open]')).toHaveCSS('opacity', '1');
   const session = await mobile.newCDPSession(touchPage);
-  async function swipe(dx, dy, cancel = false) {
-    const box = await touchPage.locator('.lightbox-main > img').boundingBox();
+  const viewportBefore = await touchPage.locator('.gallery-viewport').boundingBox();
+  async function swipe(dx, dy, cancel = false, hold = 0) {
+    await expect(touchPage.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
+    const box = await touchPage.locator('.gallery-slide.is-current img').boundingBox();
     const startX = box.x + box.width * .65, startY = box.y + box.height * .4;
+    const offsetBefore = await touchPage.locator('.gallery-track').evaluate(node => new DOMMatrix(getComputedStyle(node).transform).m41);
     await session.send('Input.dispatchTouchEvent', {type: 'touchStart', touchPoints: [{x: startX, y: startY}]});
     for (let i = 1; i <= 8; i++) await session.send('Input.dispatchTouchEvent', {type: 'touchMove', touchPoints: [{x: startX + dx * i / 8, y: startY + dy * i / 8}]});
+    if (Math.abs(dx) === 100 && !cancel) {
+      await expect.poll(async () => touchPage.locator('.gallery-track').evaluate(node => new DOMMatrix(getComputedStyle(node).transform).m41)).toBeLessThan(offsetBefore - 85);
+      await touchPage.screenshot({path: '.sites-runtime/qa/gallery-following-touch.png'});
+    }
+    if (hold) await touchPage.waitForTimeout(hold);
     await session.send('Input.dispatchTouchEvent', {type: cancel ? 'touchCancel' : 'touchEnd', touchPoints: []});
+    await expect(touchPage.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
   }
   await swipe(-100, 4);
   await expect(touchPage.locator('.lightbox-caption')).toContainText('2 / 3');
@@ -153,12 +164,32 @@ try {
   await expect(touchPage.locator('.lightbox-caption')).toContainText('2 / 3');
   await swipe(-60, 2, true);
   await expect(touchPage.locator('.lightbox-caption')).toContainText('2 / 3');
-  await expect(touchPage.locator('.lightbox-main > img')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
-  await expect(touchPage.locator('.lightbox-main > img')).toHaveCSS('opacity', '1');
-  const imageBox = await touchPage.locator('.lightbox-main > img').boundingBox();
+  await swipe(-28, 1, false, 130);
+  await expect(touchPage.locator('.lightbox-caption')).toContainText('2 / 3');
+  assert.deepEqual(await touchPage.locator('.gallery-viewport').boundingBox(), viewportBefore, 'Photo aspect ratios must not move the controls');
+  const imageBox = await touchPage.locator('.gallery-slide.is-current img').boundingBox();
   const arrowBox = await touchPage.getByRole('button', {name: 'Next photo', exact: true}).boundingBox();
   assert.ok(arrowBox.y >= imageBox.y && arrowBox.y + arrowBox.height <= imageBox.y + imageBox.height, 'Gallery arrows should stay beside the photo');
   await touchPage.screenshot({path: '.sites-runtime/qa/interactions-touch-gallery.png'});
+  await touchPage.getByRole('button', {name: 'Next photo', exact: true}).tap();
+  await touchPage.getByRole('button', {name: 'Next photo', exact: true}).tap();
+  await expect(touchPage.locator('.lightbox-caption')).toContainText('1 / 3');
+  await expect(touchPage.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
+  await touchPage.emulateMedia({reducedMotion: 'reduce'});
+  await touchPage.getByRole('button', {name: 'Next photo', exact: true}).tap();
+  await expect(touchPage.locator('.lightbox-caption')).toContainText('2 / 3');
+  await expect(touchPage.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
+  assert.equal(await touchPage.locator('.gallery-track').evaluate(node => node.getAnimations().length), 0);
+  await touchPage.emulateMedia({reducedMotion: 'no-preference'});
+  await touchPage.getByRole('button', {name: 'Next photo', exact: true}).tap();
+  await touchPage.setViewportSize({width: 844, height: 390});
+  await expect(touchPage.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
+  await expect(touchPage.locator('.lightbox-caption')).toContainText('3 / 3');
+  const closeBox = await touchPage.getByRole('button', {name: 'Close gallery', exact: true}).boundingBox();
+  assert.ok(closeBox.y >= 0 && closeBox.y + closeBox.height <= 390, 'Close control must remain visible after rotation');
+  await touchPage.getByRole('button', {name: 'Next photo', exact: true}).tap();
+  await touchPage.getByRole('button', {name: 'Close gallery', exact: true}).tap();
+  await expect(touchPage.locator('.lightbox[open]')).toHaveCount(0);
   await mobile.close();
   assert.deepEqual(errors, []);
   console.log('PASS: collage preview/navigation, page fade, category filtering/history/resizing, gallery drag/touch/keys/indicators, copy success/failure, steady QR, mobile layout, and reduced motion.');

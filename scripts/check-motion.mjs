@@ -107,7 +107,8 @@ try {
   await expect(page.locator('.lightbox[open]')).toBeVisible();
   await page.getByRole('button', {name: 'Next photo'}).click();
   await expect(page.locator('.lightbox-caption')).toContainText('2 / 3');
-  await expect(page.locator('.lightbox-main > img')).toHaveCSS('animation-name', 'sulyap-photo');
+  await expect(page.locator('.gallery-stage')).toHaveAttribute('data-state', 'idle');
+  await expect(page.locator('.gallery-slide.is-current img')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('.lightbox[open]')).toHaveCount(0);
   await noOverflow();

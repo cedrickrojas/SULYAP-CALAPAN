@@ -1,43 +1,25 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {Camera,X,ChevronLeft,ChevronRight,QrCode,MapPin} from 'lucide-react';
+import {Camera,X,QrCode,MapPin} from 'lucide-react';
+import SwipeablePhotoStage from './SwipeablePhotoStage';
 import {brandedQrDataUrl} from './qr-code';
 import QRActions,{useQrExport} from './qr-actions';
 import {destinationUrl} from './destinations';
 const num=id=>String(id).padStart(2,'0');
 export function PhotoGallery({destination:d,embedded=false}){
- const [active,setActive]=useState(null),[direction,setDirection]=useState(1),[drag,setDrag]=useState(0);
- const dialog=useRef(null),gesture=useRef(null);
+ const [active,setActive]=useState(null);
+ const dialog=useRef(null),slider=useRef(null);
  useEffect(()=>{if(active!==null&&!dialog.current?.open)dialog.current?.showModal();},[active]);
- const close=()=>{dialog.current?.close();setActive(null);setDrag(0);gesture.current=null;};
- const next=step=>{setDirection(step);setActive(i=>(i+step+d.images.length)%d.images.length);};
- const release=event=>{
-  const start=gesture.current;
-  gesture.current=null;setDrag(0);
-  if(!start||start.id!==event.pointerId)return;
-  const x=event.clientX-start.x,y=event.clientY-start.y;
-  if(Math.abs(x)>45&&Math.abs(x)>Math.abs(y)*1.25)next(x<0?1:-1);
- };
+ const close=()=>{dialog.current?.close();setActive(null);};
+ const next=step=>slider.current?.next(step);
  return <section className={embedded?'detail-gallery':'section gallery-section container'} id="gallery">
   <div className="section-heading"><div><p className="eyebrow"><span/>A GLIMPSE OF THE EXPERIENCE</p><h2>Destination <em>Gallery</em></h2><p>{d.slug==='aganhao-islet'?'An aerial view of Aganhao, with closer views of its shoreline and greenery from the same photograph. Tap a view to explore.':d.images.some(img=>img.placeholder)?'Confirmed photos are shown where available; remaining slots are marked Photo coming soon.':'A few perspectives on '+d.name+'. Tap a photo to take a closer look.'}</p></div></div>
-  <div className="gallery-grid">{d.images.map((img,i)=><button className="gallery-thumb" key={img.src} onClick={()=>{setDirection(1);setActive(i);}} aria-label={`View photo ${i+1} of ${d.name}`}><img src={img.src} alt={img.alt} loading="lazy"/><span><Camera size={18}/> {img.placeholder?'Photo coming soon':'View photo'}</span></button>)}</div>
+  <div className="gallery-grid">{d.images.map((img,i)=><button className="gallery-thumb" key={img.src} onClick={()=>setActive(i)} aria-label={`View photo ${i+1} of ${d.name}`}><img src={img.src} alt={img.alt} loading="lazy"/><span><Camera size={18}/> {img.placeholder?'Photo coming soon':'View photo'}</span></button>)}</div>
   <dialog ref={dialog} className="lightbox" aria-label={`${d.name} photo gallery`} onCancel={e=>{e.preventDefault();close();}} onClick={e=>{if(e.target===e.currentTarget)close();}} onKeyDown={e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();next(e.key==='ArrowRight'?1:-1);}}}>
    <button className="lightbox-close icon-button" aria-label="Close gallery" onClick={close}><X/></button>
    {active!==null&&<>
-    <div className={`lightbox-main${gesture.current?' is-dragging':''}`} onPointerDown={event=>{
-     if(event.target.closest('button')||!event.isPrimary||event.button!==0)return;
-     gesture.current={id:event.pointerId,x:event.clientX,y:event.clientY};
-     event.currentTarget.setPointerCapture(event.pointerId);
-    }} onPointerMove={event=>{
-     const start=gesture.current;if(!start||start.id!==event.pointerId)return;
-     const x=event.clientX-start.x,y=event.clientY-start.y;
-     if(Math.abs(x)>Math.abs(y)*1.25)setDrag(Math.max(-100,Math.min(100,x*.4)));
-    }} onPointerUp={release} onPointerCancel={()=>{gesture.current=null;setDrag(0);}} onLostPointerCapture={()=>{gesture.current=null;setDrag(0);}}>
-     <button className="lightbox-prev icon-button" aria-label="Previous photo" onClick={()=>next(-1)}><ChevronLeft/></button>
-     <img key={active} src={d.images[active].src} alt={d.images[active].alt} draggable={false} style={{'--photo-enter-x':`${direction*48}px`,transform:`translateX(${drag}px)`}}/>
-     <button className="lightbox-next icon-button" aria-label="Next photo" onClick={()=>next(1)}><ChevronRight/></button>
-    </div>
+    <SwipeablePhotoStage images={d.images} initialIndex={active} onChange={setActive} controllerRef={slider}/>
     <p className="lightbox-caption" role="status" aria-atomic="true">{d.images[active].alt} <span>{active+1} / {d.images.length}</span></p>
-    <div className="gallery-indicators" role="group" aria-label="Choose a photo">{d.images.map((img,i)=><button type="button" key={img.src} aria-label={`Show photo ${i+1}`} aria-pressed={active===i} onClick={()=>{setDirection(i>active?1:-1);setActive(i);}}><span/></button>)}</div>
+    <div className="gallery-indicators" role="group" aria-label="Choose a photo">{d.images.map((img,i)=><button type="button" key={img.src} aria-label={`Show photo ${i+1}`} aria-pressed={active===i} onClick={()=>slider.current?.goTo(i)}><span/></button>)}</div>
     <p className="gallery-hint">Swipe or use the arrows to explore</p>
    </>}
   </dialog>
