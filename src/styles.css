@@ -588,6 +588,7 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
 /* Readable typography across headings, visitor information, and controls. */
 :root {
   --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+  --font-heading: 'Lora', Georgia, serif;
   --ink: #302630;
   --muted: #5c5058;
   --action: #983856;
@@ -596,8 +597,11 @@ dialog[open]::backdrop { animation: sulyap-dialog .22s ease-out both; }
 }
 body { font-size: 1rem; font-weight: 400; line-height: 1.65; }
 h1, h2, h3 { font-family: var(--font-sans); font-weight: 600; line-height: 1.25; letter-spacing: -.02em; }
+h1, h2 { font-family: var(--font-heading); letter-spacing: -.015em; }
 h1 em, h2 em, .footer-motto, .startup-message { font-style: normal; }
 .hero-content h1 { font-weight: 700; line-height: 1.12; letter-spacing: -.035em; }
+.home-hero-collage .hero-content h1 { font-weight: 600; letter-spacing: -.025em; }
+.home-hero-collage .hero-content h1 em { font-style: italic; font-weight: 600; }
 .page-intro h1, .destination-hero h1, .detail-heading h1 { overflow-wrap: anywhere; }
 p { line-height: 1.75; }
 .hero-content > p:not(.eyebrow), .page-intro > p:last-child,
@@ -616,10 +620,12 @@ p { line-height: 1.75; }
   font-size: .875rem; line-height: 1.65; color: var(--muted);
 }
 .card-body h3, .establishment-card h2, .qr-card h3 {
-  font-size: 1.375rem; font-weight: 600; line-height: 1.4; letter-spacing: -.015em; overflow-wrap: anywhere;
+  font-family: var(--font-heading); font-size: 1.375rem; font-weight: 600; line-height: 1.4; letter-spacing: -.015em; overflow-wrap: anywhere;
 }
 .information-card h3 { font-size: 1rem; font-weight: 600; line-height: 1.45; }
 .footer-top h3, .detail-destination-card h3 { font-weight: 600; }
+.detail-destination-card h3, .hero-collage-featured .hero-collage-label,
+.footer-motto, .startup-message { font-family: var(--font-heading); }
 .button, .button.small, .hero-actions .button, .establishment-actions .button,
 .qr-tools > button, .text-link { font-size: .9375rem; font-weight: 600; line-height: 1.5; }
 .eyebrow, .hero-content .eyebrow, .scan-label, .qr-card-heading {
