@@ -1,6 +1,6 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
-import { Check, Copy, Download, Printer } from 'lucide-react';
+import { Download, Printer } from 'lucide-react';
 import { destinationUrl } from './destinations';
 import { prepareQrExport } from './qr-code';
 import { qrFilename } from './qr-layout.js';
@@ -44,25 +44,8 @@ export default function QRActions({ destination: d, qr }) {
   const [shareAction, setShareAction] = useState('');
   const sharing = Boolean(shareAction);
   const [printing, setPrinting] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const copyTimer = useRef(null);
   const downloadTarget = `qr-download-${useId()}`;
   const inApp = embeddedBrowser();
-
-  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
-
-  async function copyLink() {
-    setError('');
-    try {
-      await navigator.clipboard.writeText(destinationUrl(d));
-      setCopied(true);
-      window.clearTimeout(copyTimer.current);
-      copyTimer.current = window.setTimeout(() => setCopied(false), 2200);
-    } catch {
-      setCopied(false);
-      setError('The link could not be copied. Please try again in your browser.');
-    }
-  }
 
   useEffect(() => {
     if (!printing) return;
@@ -142,9 +125,7 @@ export default function QRActions({ destination: d, qr }) {
     <div className="qr-tools">
       <button type="button" disabled={!asset || sharing} onClick={download}><Download size={16}/> Download QR</button>
       <button type="button" disabled={!asset || sharing} onClick={print}><Printer size={16}/> Print QR</button>
-      <button type="button" className={`copy-link-button${copied ? ' is-copied' : ''}`} onClick={copyLink}>{copied ? <Check size={16}/> : <Copy size={16}/>} {copied ? 'Copied!' : 'Copy link'}</button>
     </div>
-    <span className="sr-only" aria-live="polite" aria-atomic="true">{copied ? 'Destination link copied.' : ''}</span>
     {!asset && !error && <p className="qr-action-status" role="status">Preparing download and print&#8230;</p>}
     {sharing && <p className="qr-action-status" role="status">{shareAction === 'save' ? 'Choose Save Image to add the QR to Photos.' : "Choose a print option in your device's share menu."}</p>}
     {error && <p className="error-message" role="alert">{error}</p>}

@@ -10,7 +10,6 @@ const browser = await chromium.launch({headless: true, channel: 'chromium'});
 const errors = [];
 try {
   const context = await browser.newContext({viewport: {width: 1440, height: 1000}});
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
   async function open(path) {
@@ -53,8 +52,7 @@ try {
     await expect(qrDialog.locator('h3')).toHaveText(destination.name);
     await expect(qrDialog.locator('.qr-image')).toBeVisible();
     await expect(page.locator('.hero-destination-collage')).toHaveAttribute('data-playing', 'false');
-    await qrDialog.getByRole('button', {name: 'Copy link', exact: true}).click();
-    assert.ok((await page.evaluate(() => navigator.clipboard.readText())).endsWith(`/destination/${id}#information`));
+    await expect(qrDialog.locator('.qr-tools > button')).toHaveText(['Download QR', 'Print QR']);
     await expect(page).toHaveURL(origin + '/');
     await page.keyboard.press('Escape');
     await expect(page.locator('.qr-dialog[open]')).toHaveCount(0);
@@ -111,18 +109,11 @@ try {
   await page.locator('.destination-card').first().getByRole('button').click();
   const qr = page.locator('.qr-dialog[open] .qr-image');
   await expect(qr).toBeVisible();
-  await page.getByRole('button', {name: 'Copy link', exact: true}).click();
-  await expect(page.getByRole('button', {name: 'Copied!', exact: true})).toBeVisible();
-  assert.ok((await page.evaluate(() => navigator.clipboard.readText())).endsWith('/destination/1#information'));
-  await expect(page.getByRole('button', {name: 'Copy link', exact: true})).toBeVisible();
+  await expect(page.locator('.qr-dialog[open] .qr-tools > button')).toHaveText(['Download QR', 'Print QR']);
   const qrBounds = await qr.boundingBox();
   await page.waitForTimeout(350);
   assert.deepEqual(await qr.boundingBox(), qrBounds);
   await expect(qr).toHaveCSS('animation-name', 'none');
-  await page.evaluate(() => Object.defineProperty(navigator.clipboard, 'writeText', {configurable: true, value: async () => {throw new Error('Denied');}}));
-  await page.getByRole('button', {name: 'Copy link', exact: true}).click();
-  await expect(page.getByRole('alert')).toContainText('could not be copied');
-  await expect(page.getByRole('button', {name: 'Copied!', exact: true})).toHaveCount(0);
   await noOverflow();
   await page.keyboard.press('Escape');
 
@@ -214,7 +205,7 @@ try {
   await expect(touchPage.locator('.lightbox[open]')).toHaveCount(0);
   await mobile.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: six matching collage QR popups and keyboard/mobile controls, page fade, category filtering/history/resizing, gallery drag/touch/keys/indicators, copy success/failure, steady QR, mobile layout, and reduced motion.');
+  console.log('PASS: six matching collage QR popups with only download/print controls, page fade, category filtering/history/resizing, gallery drag/touch/keys/indicators, steady QR, mobile layout, and reduced motion.');
 } finally {
   await browser.close();
 }
